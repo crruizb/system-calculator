@@ -6,7 +6,7 @@
 
 **Architecture:** Builds on Plan 1. Calculator creation checks the tenant's active plan against limits enforced server-side. The public endpoint exposes calculator config (sheet URL + settings) and branding only for Pro tenants. Stripe integration uses the official stripe-java SDK; webhook signature is verified before processing.
 
-**Tech Stack:** Kotlin, Spring Boot 3.3, Spring Data JPA, Stripe Java SDK 26.x, JUnit 5, Testcontainers (from Plan 1)
+**Tech Stack:** Kotlin, Spring Boot 4, Spring Data JPA, Stripe Java SDK 26.x, JUnit 6, Testcontainers (from Plan 1)
 
 **Prerequisite:** Plan 1 fully implemented (entities, auth, security config in place).
 
