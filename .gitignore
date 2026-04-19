@@ -13,6 +13,7 @@ dist-ssr
 *.local
 
 # Worktrees
+.worktrees
 .worktrees/
 
 # Backend build
