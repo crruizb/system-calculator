@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: ${TEST_DATASOURCE_URL:}
+    username: ${TEST_DATASOURCE_USERNAME:test}
+    password: ${TEST_DATASOURCE_PASSWORD:test}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+app:
+  jwt:
+    secret: test-secret-must-be-at-least-256-bits-long-padding-here
+    expiration-ms: 86400000
+  google:
+    client-id: test-client-id
