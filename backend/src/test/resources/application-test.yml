@@ -12,3 +12,10 @@ app:
     expiration-ms: 86400000
   google:
     client-id: test-client-id
+  stripe:
+    secret-key: sk_test_dummy
+    webhook-secret: whsec_dummy
+    basic-price-id: price_basic_dummy
+    pro-price-id: price_pro_dummy
+    success-url: http://localhost:3000/dashboard/billing?success=true
+    cancel-url: http://localhost:3000/dashboard/billing
