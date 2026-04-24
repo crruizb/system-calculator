@@ -1,9 +1,11 @@
 import { useState, useMemo } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useSheetData } from "./hooks/useSheetData";
 import { getFilterFields, matchPrice, SheetRow } from "./utils/filters";
 import PriceCalculator from "./components/PriceCalculator";
 import PriceSummary from "./components/PriceSummary";
 import LoadingSpinner from "./components/LoadingSpinner";
+import { PublicCalculator } from "./pages/PublicCalculator";
 
 const SHEET_URL = import.meta.env.VITE_SHEET_URL ?? "";
 
@@ -12,7 +14,7 @@ interface CalculatorInstance {
   filters: Record<string, string | undefined>;
 }
 
-export default function App() {
+function MainCalculator() {
   const { data, loading, error, refresh } = useSheetData(SHEET_URL);
   const filterFields = useMemo(() => getFilterFields(data), [data]);
 
@@ -65,7 +67,7 @@ export default function App() {
           ◆
         </div>
         <h1 className="font-display text-[clamp(1.75rem,5vw,2.5rem)] font-medium tracking-[0.04em] text-text-primary">
-          JUDjoies
+          System calculator
         </h1>
         {error && (
           <p className="font-body text-xs text-error">
@@ -159,5 +161,16 @@ export default function App() {
         </p>
       </footer>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/c/:tenantSlug/:calcSlug" element={<PublicCalculator />} />
+        <Route path="*" element={<MainCalculator />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

@@ -3,10 +3,11 @@ import { useEffect, useRef } from "react";
 interface PriceDisplayProps {
   price: string | null;
   currency?: string;
+  locale?: string;
   allSelected: boolean;
 }
 
-export default function PriceDisplay({ price, currency = "€", allSelected }: PriceDisplayProps) {
+export default function PriceDisplay({ price, currency = "€", locale = "es-ES", allSelected }: PriceDisplayProps) {
   const prevRef = useRef<string | null>(null);
   const numRef = useRef<HTMLDivElement>(null);
 
@@ -35,7 +36,7 @@ export default function PriceDisplay({ price, currency = "€", allSelected }: P
           <>
             <span className="font-display text-[2rem] font-light text-gold-muted leading-none">{currency}</span>
             <span className="font-display text-[4rem] font-semibold leading-none text-gold tracking-[-0.02em]">
-              {parseFloat(price).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              {parseFloat(price).toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </>
         ) : (

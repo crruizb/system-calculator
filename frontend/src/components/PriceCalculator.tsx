@@ -11,6 +11,8 @@ interface PriceCalculatorProps {
   onFiltersChange: (id: string, filters: Record<string, string | undefined>) => void;
   onRemove: (id: string) => void;
   showRemove: boolean;
+  currency?: string;
+  locale?: string;
 }
 
 export default function PriceCalculator({
@@ -21,6 +23,8 @@ export default function PriceCalculator({
   onFiltersChange,
   onRemove,
   showRemove,
+  currency,
+  locale,
 }: PriceCalculatorProps) {
   const handleChange = (field: string, value: string | null) => {
     const next = { ...filters, [field]: value ?? undefined };
@@ -64,7 +68,7 @@ export default function PriceCalculator({
       </section>
 
       {/* Price result */}
-      <PriceDisplay price={price} allSelected={allSelected} />
+      <PriceDisplay price={price} allSelected={allSelected} currency={currency} locale={locale} />
 
       {/* Actions */}
       <div className="flex gap-3 justify-center flex-wrap">
