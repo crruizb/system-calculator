@@ -15,18 +15,18 @@ services:
       timeout: 5s
       retries: 5
 
-  backend:
-    build: ./backend
-    ports:
-      - "8080:8080"
-    env_file: .env
-    environment:
-      DATABASE_URL: jdbc:postgresql://postgres:5432/systemcalculator
-      DATABASE_USERNAME: postgres
-      DATABASE_PASSWORD: postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
+  # backend:
+  #   build: ./backend
+  #   ports:
+  #     - "8080:8080"
+  #   env_file: .env
+  #   environment:
+  #     DATABASE_URL: jdbc:postgresql://postgres:5432/systemcalculator
+  #     DATABASE_USERNAME: postgres
+  #     DATABASE_PASSWORD: postgres
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
 
 volumes:
   postgres_data:
