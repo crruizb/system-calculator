@@ -6,11 +6,15 @@ interface InstanceSummary {
 interface PriceSummaryProps {
   instances: InstanceSummary[];
   filterFields: string[];
+  currency?: string;
+  locale?: string;
 }
 
 export default function PriceSummary({
   instances,
   filterFields,
+  currency = "€",
+  locale = "es-ES",
 }: PriceSummaryProps) {
   const resolved = instances
     .map((inst) => ({
@@ -52,11 +56,11 @@ export default function PriceSummary({
               )}
             </div>
             <span className="font-display text-[1.1rem] font-semibold text-gold whitespace-nowrap self-end sm:self-auto">
-              {inst.value.toLocaleString("es-ES", {
+              {inst.value.toLocaleString(locale, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}{" "}
-              €
+              {currency}
             </span>
           </div>
         ))}
@@ -65,10 +69,10 @@ export default function PriceSummary({
       {/* Total */}
       <div className="flex items-baseline gap-1">
         <span className="font-display text-[1.5rem] font-light text-gold-muted leading-none">
-          €
+          {currency}
         </span>
         <span className="font-display text-[3rem] font-semibold leading-none text-gold tracking-[-0.02em]">
-          {total.toLocaleString("es-ES", {
+          {total.toLocaleString(locale, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}

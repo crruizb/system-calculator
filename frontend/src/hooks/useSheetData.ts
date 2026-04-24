@@ -35,13 +35,17 @@ function saveToCache(data: SheetRow[]): void {
   }
 }
 
-export function useSheetData(sheetUrl: string): UseSheetDataResult {
+export function useSheetData(sheetUrl: string | null): UseSheetDataResult {
   const [data, setData] = useState<SheetRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(
     (forceRefresh = false) => {
+      if (!sheetUrl) {
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       setError(null);
 
