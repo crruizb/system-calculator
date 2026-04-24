@@ -17,3 +17,10 @@ app:
     expiration-ms: 86400000 # 24 hours
   google:
     client-id: ${GOOGLE_CLIENT_ID}
+  stripe:
+    secret-key: ${STRIPE_SECRET_KEY}
+    webhook-secret: ${STRIPE_WEBHOOK_SECRET}
+    basic-price-id: ${STRIPE_BASIC_PRICE_ID}
+    pro-price-id: ${STRIPE_PRO_PRICE_ID}
+    success-url: ${APP_BASE_URL}/dashboard/billing?success=true
+    cancel-url: ${APP_BASE_URL}/dashboard/billing
