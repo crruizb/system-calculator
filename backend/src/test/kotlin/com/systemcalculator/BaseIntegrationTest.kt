@@ -6,7 +6,6 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
-import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
 @SpringBootTest
@@ -15,11 +14,16 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @Testcontainers
 abstract class BaseIntegrationTest {
     companion object {
-        @Container
-        val postgres = PostgreSQLContainer<Nothing>("postgres:16").apply {
+        // No @Container — we manage lifecycle manually so the container is not stopped
+        // between test classes (prevents Spring context cache from losing the connection).
+        private val postgres = PostgreSQLContainer<Nothing>("postgres:16").apply {
             withDatabaseName("testdb")
             withUsername("test")
             withPassword("test")
+        }
+
+        init {
+            postgres.start()
         }
 
         @JvmStatic

@@ -22,6 +22,7 @@ export function PublicCalculator() {
   const [instances, setInstances] = useState<CalculatorInstance[]>([
     { id: crypto.randomUUID(), filters: {} },
   ])
+  const [activeTabId, setActiveTabId] = useState<string>(() => instances[0].id)
 
   const filterFields = useMemo(() => getFilterFields(data), [data])
 
@@ -56,7 +57,33 @@ export function PublicCalculator() {
 
       {dataLoading && <LoadingSpinner />}
 
-      {instances.map((inst) => (
+      <div className="flex items-center gap-1 px-4 mt-2 mb-0">
+        {instances.map((inst, i) => (
+          <button
+            key={inst.id}
+            onClick={() => setActiveTabId(inst.id)}
+            className={`px-3 py-1 text-sm rounded-t-lg transition-colors ${
+              inst.id === activeTabId
+                ? 'bg-[var(--color-surface)] text-[var(--color-gold)] font-semibold'
+                : 'text-[var(--color-text-primary)]/40 hover:text-[var(--color-text-primary)]/70'
+            }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+        <button
+          onClick={() => {
+            const newId = crypto.randomUUID()
+            setInstances((prev) => [...prev, { id: newId, filters: {} }])
+            setActiveTabId(newId)
+          }}
+          className="px-3 py-1 text-sm text-[var(--color-text-primary)]/40 hover:text-[var(--color-text-primary)]/70 transition-colors"
+        >
+          +
+        </button>
+      </div>
+
+      {instances.map((inst) => inst.id === activeTabId && (
         <PriceCalculator
           key={inst.id}
           instanceId={inst.id}
@@ -67,20 +94,15 @@ export function PublicCalculator() {
             setInstances((prev) => prev.map((p) => p.id === id ? { ...p, filters: f } : p))
           }
           showRemove={instances.length > 1}
-          onRemove={(id) => setInstances((prev) => prev.filter((p) => p.id !== id))}
+          onRemove={(id) => {
+            const remaining = instances.filter((p) => p.id !== id)
+            setInstances(remaining)
+            if (activeTabId === id) setActiveTabId(remaining[remaining.length - 1].id)
+          }}
           currency={currency}
           locale={locale}
         />
       ))}
-
-      <div className="text-center mt-4">
-        <button onClick={() => setInstances((prev) => [
-          ...prev,
-          { id: crypto.randomUUID(), filters: {} },
-        ])}>
-          + Add Calculator
-        </button>
-      </div>
 
       {instances.length >= 2 && (
         <PriceSummary

@@ -28,6 +28,7 @@ export function useTenantCalculator(
   });
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setState({ config: null, loading: true, error: null });
     apiFetch<TenantCalculatorConfig>(`/api/public/${tenantSlug}/${calcSlug}`)
       .then((config) => setState({ config, loading: false, error: null }))

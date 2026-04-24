@@ -43,6 +43,11 @@ class SecurityConfig(
                 it.requestMatchers("/api/auth/**", "/api/public/**", "/api/webhooks/**").permitAll()
                 it.anyRequest().authenticated()
             }
+            .exceptionHandling {
+                it.authenticationEntryPoint { _, response, _ ->
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
+                }
+            }
             .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
     }

@@ -25,10 +25,19 @@ describe('Dashboard', () => {
 
   it('shows list of calculators', async () => {
     vi.spyOn(client, 'apiFetchAuth').mockResolvedValue([
-      { id: '1', name: 'Diamond Ring', slug: 'diamond-ring', sheetUrl: 'https://example.com', settings: {}, branding: {}, isActive: true },
+      { id: '1', name: 'Diamond Ring', slug: 'diamond-ring', tenantSlug: 'my-tenant', sheetUrl: 'https://example.com', settings: {}, branding: {}, isActive: true },
     ])
     renderDashboard()
     await waitFor(() => expect(screen.getByText('Diamond Ring')).toBeInTheDocument())
+  })
+
+  it('shows view link pointing to public calculator url', async () => {
+    vi.spyOn(client, 'apiFetchAuth').mockResolvedValue([
+      { id: '1', name: 'Diamond Ring', slug: 'diamond-ring', tenantSlug: 'my-tenant', sheetUrl: 'https://example.com', settings: {}, branding: {}, isActive: true },
+    ])
+    renderDashboard()
+    const viewLink = await screen.findByRole('link', { name: /view/i })
+    expect(viewLink).toHaveAttribute('href', '/c/my-tenant/diamond-ring')
   })
 
   it('shows empty state when no calculators', async () => {
@@ -37,10 +46,10 @@ describe('Dashboard', () => {
     await waitFor(() => expect(screen.getByText(/no calculators/i)).toBeInTheDocument())
   })
 
-  it('navigates to create page on button click', async () => {
+  it('navigates to create page on link click', async () => {
     vi.spyOn(client, 'apiFetchAuth').mockResolvedValue([])
     renderDashboard()
-    await userEvent.click(await screen.findByRole('button', { name: /new calculator/i }))
+    await userEvent.click(await screen.findByRole('link', { name: /new calculator/i }))
     expect(screen.getByText('New Calculator')).toBeInTheDocument()
   })
 })

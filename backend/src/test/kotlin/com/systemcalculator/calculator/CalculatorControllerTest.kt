@@ -89,4 +89,42 @@ class CalculatorControllerTest : BaseIntegrationTest() {
             status { isNotFound() }
         }
     }
+
+    @Test
+    fun `list calculators includes tenantSlug`() {
+        val token = registerAndGetToken("calc5@test.com", "calc-tenant-5")
+
+        mockMvc.post("/api/calculators") {
+            header("Authorization", "Bearer $token")
+            contentType = MediaType.APPLICATION_JSON
+            content = """{"name":"Listed","slug":"listed","sheetUrl":"https://example.com"}"""
+        }.andExpect { status { isCreated() } }
+
+        mockMvc.get("/api/calculators") {
+            header("Authorization", "Bearer $token")
+        }.andExpect {
+            status { isOk() }
+            jsonPath("$[0].tenantSlug") { value("calc-tenant-5") }
+        }
+    }
+
+    @Test
+    fun `get single calculator by id returns tenantSlug`() {
+        val token = registerAndGetToken("calc6@test.com", "calc-tenant-6")
+
+        val createResult = mockMvc.post("/api/calculators") {
+            header("Authorization", "Bearer $token")
+            contentType = MediaType.APPLICATION_JSON
+            content = """{"name":"Single","slug":"single","sheetUrl":"https://example.com"}"""
+        }.andReturn()
+        val id = objectMapper.readTree(createResult.response.contentAsString)["id"].asText()
+
+        mockMvc.get("/api/calculators/$id") {
+            header("Authorization", "Bearer $token")
+        }.andExpect {
+            status { isOk() }
+            jsonPath("$.tenantSlug") { value("calc-tenant-6") }
+            jsonPath("$.slug") { value("single") }
+        }
+    }
 }

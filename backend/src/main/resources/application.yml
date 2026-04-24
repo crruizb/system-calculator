@@ -16,7 +16,7 @@ app:
     secret: ${JWT_SECRET:change-me-to-a-256-bit-secret-in-production}
     expiration-ms: 86400000 # 24 hours
   google:
-    client-id: ${GOOGLE_CLIENT_ID}
+    client-id: ${GOOGLE_CLIENT_ID:aaa}
   stripe:
     secret-key: ${STRIPE_SECRET_KEY:aaa}
     webhook-secret: ${STRIPE_WEBHOOK_SECRET:aaa}

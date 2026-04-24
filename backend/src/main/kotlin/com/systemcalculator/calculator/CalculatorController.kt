@@ -15,6 +15,10 @@ class CalculatorController(private val calculatorService: CalculatorService) {
     @GetMapping("/api/calculators")
     fun list(@AuthenticationPrincipal user: User) = calculatorService.list(user)
 
+    @GetMapping("/api/calculators/{id}")
+    fun getOne(@AuthenticationPrincipal user: User, @PathVariable id: UUID) =
+        calculatorService.getOne(user, id)
+
     @PostMapping("/api/calculators")
     @ResponseStatus(HttpStatus.CREATED)
     fun create(

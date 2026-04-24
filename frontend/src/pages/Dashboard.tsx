@@ -7,6 +7,7 @@ interface Calculator {
   id: string
   name: string
   slug: string
+  tenantSlug: string
   sheetUrl: string
   settings: Record<string, unknown>
   branding: Record<string, unknown>
@@ -44,12 +45,12 @@ export function Dashboard() {
         </div>
       </div>
 
-      <button
-        onClick={() => navigate('/dashboard/new')}
-        className="mb-6 px-5 py-2.5 rounded-lg bg-[var(--color-gold)] text-black font-semibold hover:bg-[var(--color-gold-muted)] transition-colors"
+      <Link
+        to="/dashboard/new"
+        className="inline-block mb-6 px-5 py-2.5 rounded-lg bg-[var(--color-gold)] text-black font-semibold hover:bg-[var(--color-gold-muted)] transition-colors"
       >
         + New Calculator
-      </button>
+      </Link>
 
       {calculators.length === 0 && (
         <p className="text-[var(--color-text-primary)]/50 text-center mt-12">No calculators yet. Create one to get started.</p>
@@ -60,9 +61,17 @@ export function Dashboard() {
           <li key={c.id} className="p-4 bg-[var(--color-surface)] rounded-xl flex items-center justify-between">
             <div>
               <p className="font-semibold">{c.name}</p>
-              <p className="text-sm text-[var(--color-text-primary)]/50">/c/…/{c.slug}</p>
+              <p className="text-sm text-[var(--color-text-primary)]/50">/c/{c.tenantSlug}/{c.slug}</p>
             </div>
             <div className="flex gap-3">
+              <a
+                href={`/c/${c.tenantSlug}/${c.slug}`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-sm text-[var(--color-text-primary)]/50 hover:text-[var(--color-text-primary)]"
+              >
+                View
+              </a>
               <Link to={`/dashboard/${c.id}`} className="text-sm text-[var(--color-gold)] hover:underline">Edit</Link>
               <button
                 onClick={() => handleDelete(c.id)}
