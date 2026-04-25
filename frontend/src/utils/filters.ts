@@ -6,7 +6,7 @@ export type SheetRow = Record<string, string>;
 export function getFilterFields(data: SheetRow[]): string[] {
   if (!data || data.length === 0) return [];
   return Object.keys(data[0]).filter(
-    (k) => k.toLowerCase() !== "precio" && k.trim() !== ""
+    (k) => k.toLowerCase() !== "precio" && k.toLowerCase() !== "price" && k.trim() !== ""
   );
 }
 
@@ -50,5 +50,5 @@ export function matchPrice(
   const match = data.find((item) =>
     filterFields.every((field) => item[field] === filters[field])
   );
-  return match ? (match.precio ?? match.Precio ?? null) : null;
+  return match ? (match.precio ?? match.Precio ?? match.price ?? match.Price ?? null) : null;
 }

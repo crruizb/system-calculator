@@ -24,7 +24,7 @@ export default function PriceDisplay({ price, currency = "€", locale = "es-ES"
     <div
       className={`p-8 px-7 bg-surface border rounded-md text-center transition-all duration-[400ms] min-h-[120px] flex flex-col items-center justify-center gap-2 ${
         price
-          ? "border-gold-muted shadow-[0_0_40px_rgba(201,168,76,0.08),0_2px_16px_rgba(0,0,0,0.4)]"
+          ? "border-gold-muted shadow-[0_0_40px_rgba(99,102,241,0.12),0_2px_16px_rgba(0,0,0,0.3)]"
           : "border-border-line"
       }`}
     >

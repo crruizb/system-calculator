@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { useTheme } from '../context/ThemeContext'
 import { useTenantCalculator } from '../hooks/useTenantCalculator'
 import { useSheetData } from '../hooks/useSheetData'
 import PriceCalculator from '../components/PriceCalculator'
@@ -17,6 +18,7 @@ interface CalculatorInstance {
 
 export function PublicCalculator() {
   const { tenantSlug = '', calcSlug = '' } = useParams<{ tenantSlug: string; calcSlug: string }>()
+  const { theme, toggleTheme } = useTheme()
   const { config, loading: configLoading, error } = useTenantCalculator(tenantSlug, calcSlug)
   const { data, loading: dataLoading } = useSheetData(config?.sheetUrl ?? null)
   const [instances, setInstances] = useState<CalculatorInstance[]>([
@@ -31,7 +33,11 @@ export function PublicCalculator() {
     [instances, data, filterFields],
   )
 
-  if (configLoading) return <div role="status"><LoadingSpinner /></div>
+  if (configLoading) return (
+    <div data-theme={theme} style={{ minHeight: '100dvh', background: 'var(--color-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <LoadingSpinner />
+    </div>
+  )
   if (error) return <p className="text-center text-red-400 mt-20">Calculator not found.</p>
   if (!config) return null
 
@@ -45,75 +51,104 @@ export function PublicCalculator() {
     : {}
 
   return (
-    <div style={cssVars}>
-      <header className="text-center py-8">
+    <div
+      data-theme={theme}
+      style={{
+        ...cssVars,
+        minHeight: '100dvh',
+        background: 'var(--color-bg)',
+        color: 'var(--color-text-primary)',
+      }}
+    >
+      <header className="relative text-center px-6 pt-10 pb-6 md:pt-14 md:pb-8">
         {branding.logo
           ? <img src={branding.logo} alt={branding.companyName} className="h-12 mx-auto" />
           : <img src="/diamond.png" alt="logo" className="h-12 mx-auto" />}
         <h1 className="mt-2 font-display text-2xl">
           {branding.companyName ?? 'Price Calculator'}
         </h1>
+        <button
+          onClick={toggleTheme}
+          aria-label="Toggle theme"
+          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded transition-colors"
+          style={{ color: 'var(--color-text-muted)' }}
+        >
+          {theme === 'dark' ? (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+          ) : (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          )}
+        </button>
       </header>
 
       {dataLoading && <LoadingSpinner />}
 
-      <div className="flex items-center gap-1 px-4 mt-2 mb-0">
-        {instances.map((inst, i) => (
+      <div className="w-full max-w-3xl mx-auto px-4 md:px-8 pb-16">
+        <div className="flex items-center gap-1 mb-0">
+          {instances.map((inst, i) => (
+            <button
+              key={inst.id}
+              onClick={() => setActiveTabId(inst.id)}
+              className={`px-3 py-1 text-sm rounded-t-lg transition-colors ${
+                inst.id === activeTabId
+                  ? 'bg-[var(--color-surface)] text-[var(--color-gold)] font-semibold'
+                  : 'text-[var(--color-text-primary)]/40 hover:text-[var(--color-text-primary)]/70'
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
           <button
-            key={inst.id}
-            onClick={() => setActiveTabId(inst.id)}
-            className={`px-3 py-1 text-sm rounded-t-lg transition-colors ${
-              inst.id === activeTabId
-                ? 'bg-[var(--color-surface)] text-[var(--color-gold)] font-semibold'
-                : 'text-[var(--color-text-primary)]/40 hover:text-[var(--color-text-primary)]/70'
-            }`}
+            onClick={() => {
+              const newId = crypto.randomUUID()
+              setInstances((prev) => [...prev, { id: newId, filters: {} }])
+              setActiveTabId(newId)
+            }}
+            className="px-3 py-1 text-sm text-[var(--color-text-primary)]/40 hover:text-[var(--color-text-primary)]/70 transition-colors"
           >
-            {i + 1}
+            +
           </button>
+        </div>
+
+        {instances.map((inst) => inst.id === activeTabId && (
+          <PriceCalculator
+            key={inst.id}
+            instanceId={inst.id}
+            data={data}
+            filterFields={filterFields}
+            filters={inst.filters}
+            onFiltersChange={(id, f) =>
+              setInstances((prev) => prev.map((p) => p.id === id ? { ...p, filters: f } : p))
+            }
+            showRemove={instances.length > 1}
+            onRemove={(id) => {
+              const remaining = instances.filter((p) => p.id !== id)
+              setInstances(remaining)
+              if (activeTabId === id) setActiveTabId(remaining[remaining.length - 1].id)
+            }}
+            currency={currency}
+            locale={locale}
+          />
         ))}
-        <button
-          onClick={() => {
-            const newId = crypto.randomUUID()
-            setInstances((prev) => [...prev, { id: newId, filters: {} }])
-            setActiveTabId(newId)
-          }}
-          className="px-3 py-1 text-sm text-[var(--color-text-primary)]/40 hover:text-[var(--color-text-primary)]/70 transition-colors"
-        >
-          +
-        </button>
+
+        {instances.length >= 2 && (
+          <PriceSummary
+            instances={instances.map((inst, i) => ({ filters: inst.filters, price: prices[i] }))}
+            filterFields={filterFields}
+            currency={currency}
+            locale={locale}
+          />
+        )}
+
+        {showWatermark && <Watermark />}
       </div>
-
-      {instances.map((inst) => inst.id === activeTabId && (
-        <PriceCalculator
-          key={inst.id}
-          instanceId={inst.id}
-          data={data}
-          filterFields={filterFields}
-          filters={inst.filters}
-          onFiltersChange={(id, f) =>
-            setInstances((prev) => prev.map((p) => p.id === id ? { ...p, filters: f } : p))
-          }
-          showRemove={instances.length > 1}
-          onRemove={(id) => {
-            const remaining = instances.filter((p) => p.id !== id)
-            setInstances(remaining)
-            if (activeTabId === id) setActiveTabId(remaining[remaining.length - 1].id)
-          }}
-          currency={currency}
-          locale={locale}
-        />
-      ))}
-
-      {instances.length >= 2 && (
-        <PriceSummary
-          instances={instances.map((inst, i) => ({ filters: inst.filters, price: prices[i] }))}
-          filterFields={filterFields}
-          currency={currency}
-          locale={locale}
-        />
-      )}
-
-      {showWatermark && <Watermark />}
     </div>
   )
 }

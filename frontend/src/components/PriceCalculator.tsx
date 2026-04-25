@@ -43,10 +43,10 @@ export default function PriceCalculator({
   const allSelected = filterFields.every((f) => filters[f]);
 
   return (
-    <div className="w-full flex flex-col gap-8">
-      {/* Filters */}
+    <div className="w-full flex flex-col md:flex-row md:gap-10 gap-8 py-6">
+      {/* Filters — left */}
       <section
-        className="flex flex-col gap-5"
+        className="flex-1 flex flex-col gap-5"
         aria-label="Opciones del producto"
       >
         {filterFields.map((field, i) => {
@@ -67,28 +67,29 @@ export default function PriceCalculator({
         })}
       </section>
 
-      {/* Price result */}
-      <PriceDisplay price={price} allSelected={allSelected} currency={currency} locale={locale} />
+      {/* Price + actions — right, sticky on desktop */}
+      <div className="md:w-72 md:sticky md:top-8 md:self-start flex flex-col gap-6">
+        <PriceDisplay price={price} allSelected={allSelected} currency={currency} locale={locale} />
 
-      {/* Actions */}
-      <div className="flex gap-3 justify-center flex-wrap">
-        <button
-          className="min-h-13 px-4 rounded font-body text-[0.85rem] font-medium tracking-[0.06em] uppercase cursor-pointer transition-all border border-border-line bg-transparent text-text-muted hover:border-text-muted hover:text-text-primary disabled:opacity-30 disabled:cursor-not-allowed"
-          onClick={() => onFiltersChange(instanceId, {})}
-          disabled={Object.keys(filters).length === 0}
-          aria-label="Limpiar selección"
-        >
-          Limpiar
-        </button>
-        {showRemove && (
+        <div className="flex gap-3 justify-center flex-wrap">
           <button
-            className="min-h-13 px-4 rounded font-body text-[0.85rem] font-medium tracking-[0.06em] uppercase cursor-pointer transition-all border border-border-line bg-transparent text-text-muted hover:border-text-muted hover:text-text-primary"
-            onClick={() => onRemove(instanceId)}
-            aria-label="Eliminar calculadora"
+            className="min-h-13 px-4 rounded font-body text-[0.85rem] font-medium tracking-[0.06em] uppercase cursor-pointer transition-all border border-border-line bg-transparent text-text-muted hover:border-text-muted hover:text-text-primary disabled:opacity-30 disabled:cursor-not-allowed"
+            onClick={() => onFiltersChange(instanceId, {})}
+            disabled={Object.keys(filters).length === 0}
+            aria-label="Limpiar selección"
           >
-            ✕ Eliminar
+            Limpiar
           </button>
-        )}
+          {showRemove && (
+            <button
+              className="min-h-13 px-4 rounded font-body text-[0.85rem] font-medium tracking-[0.06em] uppercase cursor-pointer transition-all border border-border-line bg-transparent text-text-muted hover:border-text-muted hover:text-text-primary"
+              onClick={() => onRemove(instanceId)}
+              aria-label="Eliminar calculadora"
+            >
+              ✕ Eliminar
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

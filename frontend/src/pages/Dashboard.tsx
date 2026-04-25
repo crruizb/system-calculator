@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { apiFetchAuth } from "../api/client";
-import { useAuth } from "../context/AuthContext";
 
 interface Calculator {
   id: string;
@@ -15,8 +14,6 @@ interface Calculator {
 }
 
 export function Dashboard() {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
   const [calculators, setCalculators] = useState<Calculator[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,77 +30,90 @@ export function Dashboard() {
 
   if (loading)
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <span>Loading…</span>
+      <div className="flex items-center justify-center py-20">
+        <span style={{ color: 'var(--color-text-muted)' }}>Loading…</span>
       </div>
     );
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] p-8 max-w-3xl mx-auto">
+    <div>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="font-display text-3xl">My Calculators</h1>
-        <div className="flex gap-3">
+        <h1 className="font-display text-3xl" style={{ color: 'var(--color-text-primary)' }}>
+          My Calculators
+        </h1>
+        <div className="flex items-center gap-3">
           <Link
-            to="/dashboard/billing"
-            className="text-sm text-[var(--color-gold)] hover:underline"
+            to="/guide"
+            className="text-sm transition-colors"
+            style={{ color: 'var(--color-text-muted)' }}
           >
-            Billing
+            Guide
           </Link>
-          <button
-            onClick={() => {
-              logout();
-              navigate("/login");
-            }}
-            className="text-sm text-[var(--color-text-primary)]/50 hover:text-[var(--color-text-primary)]"
-          >
-            Sign out
-          </button>
+        <Link
+          to="/dashboard/new"
+          className="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors"
+          style={{ background: 'var(--color-gold)' }}
+          onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-gold-muted)')}
+          onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-gold)')}
+        >
+          + New Calculator
+        </Link>
         </div>
       </div>
 
-      <Link
-        to="/dashboard/new"
-        className="inline-block mb-6 px-5 py-2.5 rounded-lg bg-[var(--color-gold)] text-black font-semibold hover:bg-[var(--color-gold-muted)] transition-colors"
-      >
-        + New Calculator
-      </Link>
-
       {calculators.length === 0 && (
-        <p className="text-[var(--color-text-primary)]/50 text-center mt-12">
-          No calculators yet. Create one to get started.
-        </p>
+        <div className="text-center py-20">
+          <p className="mb-2" style={{ color: 'var(--color-text-muted)' }}>No calculators yet.</p>
+          <Link
+            to="/guide"
+            className="text-sm transition-colors"
+            style={{ color: 'var(--color-gold)' }}
+          >
+            See how to set up your Google Sheet →
+          </Link>
+        </div>
       )}
 
-      <ul className="space-y-3">
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {calculators.map((c) => (
           <li
             key={c.id}
-            className="p-4 bg-[var(--color-surface)] rounded-xl flex items-center justify-between"
+            className="rounded-xl p-5 flex flex-col gap-4"
+            style={{
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border-line)',
+            }}
           >
-            <div>
-              <p className="font-semibold">{c.name}</p>
-              <p className="text-sm text-[var(--color-text-primary)]/50">
+            <div className="flex-1">
+              <p className="font-semibold mb-1" style={{ color: 'var(--color-text-primary)' }}>
+                {c.name}
+              </p>
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                 /c/{c.tenantSlug}/{c.slug}
               </p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex items-center gap-4 text-sm border-t pt-3" style={{ borderColor: 'var(--color-border-line)' }}>
               <a
                 href={`/c/${c.tenantSlug}/${c.slug}`}
                 target="_blank"
                 rel="noreferrer"
-                className="text-sm text-[var(--color-text-primary)]/50 hover:text-[var(--color-text-primary)]"
+                className="transition-colors"
+                style={{ color: 'var(--color-text-muted)' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text-primary)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}
               >
-                View
+                View ↗
               </a>
               <Link
                 to={`/dashboard/${c.id}`}
-                className="text-sm text-[var(--color-gold)] hover:underline"
+                className="transition-colors"
+                style={{ color: 'var(--color-gold)' }}
               >
                 Edit
               </Link>
               <button
                 onClick={() => handleDelete(c.id)}
-                className="text-sm text-red-400 hover:text-red-300"
+                className="ml-auto text-red-400 hover:text-red-300 transition-colors"
               >
                 Delete
               </button>

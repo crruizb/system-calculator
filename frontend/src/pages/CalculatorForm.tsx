@@ -61,8 +61,11 @@ export function CalculatorForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] p-8">
-      <div className="w-full max-w-lg bg-[var(--color-surface)] rounded-2xl p-8 shadow-xl">
+    <div className="max-w-lg">
+      <div
+        className="w-full rounded-2xl p-8"
+        style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border-line)' }}
+      >
         <h1 className="font-display text-3xl mb-8">
           {isEdit ? "Edit Calculator" : "New Calculator"}
         </h1>
@@ -100,8 +103,17 @@ export function CalculatorForm() {
             </div>
           )}
           <div>
-            <label htmlFor="sheetUrl" className="block text-sm mb-1">
-              Google Sheet URL
+            <label htmlFor="sheetUrl" className="flex items-center justify-between text-sm mb-1">
+              <span>Google Sheet URL</span>
+              <a
+                href="/guide"
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs transition-colors"
+                style={{ color: 'var(--color-gold)' }}
+              >
+                How do I get this URL?
+              </a>
             </label>
             <input
               id="sheetUrl"
@@ -142,7 +154,7 @@ export function CalculatorForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-lg bg-[var(--color-gold)] text-black font-semibold hover:bg-[var(--color-gold-muted)] transition-colors disabled:opacity-50"
+            className="w-full py-3 rounded-lg bg-[var(--color-gold)] text-white font-semibold hover:bg-[var(--color-gold-muted)] transition-colors disabled:opacity-50"
           >
             {loading ? "Saving…" : isEdit ? "Save Changes" : "Create"}
           </button>
