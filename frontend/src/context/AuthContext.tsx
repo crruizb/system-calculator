@@ -1,32 +1,51 @@
-import { createContext, useContext, useState, ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { apiFetch } from "../api/client";
 
 interface AuthContextValue {
-  token: string | null
-  login: (token: string) => void
-  logout: () => void
+  isLoggedIn: boolean | null;
+  markLoggedIn: () => void;
+  logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextValue | null>(null)
+const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'))
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
-  function login(t: string) {
-    localStorage.setItem('token', t)
-    setToken(t)
+  useEffect(() => {
+    apiFetch("/api/tenants/me")
+      .then(() => setIsLoggedIn(true))
+      .catch(() => setIsLoggedIn(false));
+  }, []);
+
+  function markLoggedIn() {
+    setIsLoggedIn(true);
   }
 
-  function logout() {
-    localStorage.removeItem('token')
-    setToken(null)
+  async function logout() {
+    try {
+      await apiFetch("/api/auth/logout", { method: "POST" });
+    } finally {
+      setIsLoggedIn(false);
+    }
   }
 
-  return <AuthContext.Provider value={{ token, login, logout }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, markLoggedIn, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function useAuth(): AuthContextValue {
-  const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error('useAuth must be used inside AuthProvider')
-  return ctx
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
+  return ctx;
 }

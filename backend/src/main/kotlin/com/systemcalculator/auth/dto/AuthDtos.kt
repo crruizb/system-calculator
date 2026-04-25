@@ -15,11 +15,3 @@ data class LoginRequest(
     @field:NotBlank @field:Email val email: String,
     @field:NotBlank val password: String
 )
-
-data class GoogleAuthRequest(
-    @field:NotBlank val idToken: String,
-    val tenantName: String? = null,
-    @field:Size(min = 2, max = 63) val tenantSlug: String? = null
-)
-
-data class AuthResponse(val token: String)

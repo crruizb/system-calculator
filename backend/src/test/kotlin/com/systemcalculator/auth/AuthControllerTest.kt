@@ -12,13 +12,14 @@ class AuthControllerTest : BaseIntegrationTest() {
     @Autowired lateinit var mockMvc: MockMvc
 
     @Test
-    fun `register creates tenant and returns JWT`() {
+    fun `register creates tenant and sets token cookie`() {
         mockMvc.post("/api/auth/register") {
             contentType = MediaType.APPLICATION_JSON
             content = """{"email":"owner@acme.com","password":"secret123","tenantName":"Acme","tenantSlug":"acme"}"""
         }.andExpect {
             status { isCreated() }
-            jsonPath("$.token") { isNotEmpty() }
+            cookie { exists("token") }
+            cookie { httpOnly("token", true) }
         }
     }
 
@@ -36,7 +37,7 @@ class AuthControllerTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun `login with correct credentials returns JWT`() {
+    fun `login with correct credentials sets token cookie`() {
         mockMvc.post("/api/auth/register") {
             contentType = MediaType.APPLICATION_JSON
             content = """{"email":"login@test.com","password":"pass1234","tenantName":"T","tenantSlug":"login-slug"}"""
@@ -47,7 +48,8 @@ class AuthControllerTest : BaseIntegrationTest() {
             content = """{"email":"login@test.com","password":"pass1234"}"""
         }.andExpect {
             status { isOk() }
-            jsonPath("$.token") { isNotEmpty() }
+            cookie { exists("token") }
+            cookie { httpOnly("token", true) }
         }
     }
 
@@ -62,5 +64,18 @@ class AuthControllerTest : BaseIntegrationTest() {
             contentType = MediaType.APPLICATION_JSON
             content = """{"email":"wrong@test.com","password":"wrong"}"""
         }.andExpect { status { isUnauthorized() } }
+    }
+
+    @Test
+    fun `logout clears token cookie`() {
+        mockMvc.post("/api/auth/register") {
+            contentType = MediaType.APPLICATION_JSON
+            content = """{"email":"logout@test.com","password":"pass1234","tenantName":"T","tenantSlug":"logout-slug"}"""
+        }.andExpect { status { isCreated() } }
+
+        mockMvc.post("/api/auth/logout").andExpect {
+            status { isOk() }
+            cookie { maxAge("token", 0) }
+        }
     }
 }
