@@ -1,7 +1,7 @@
 {
-  "name": "Calculadora de Precios",
-  "short_name": "CalcPrecios",
-  "description": "Calculadora de precios dinámica con datos de Google Sheets",
+  "name": "Prexario",
+  "short_name": "Prexario",
+  "description": "Turn a Google Sheet into a shareable price calculator",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#080808",

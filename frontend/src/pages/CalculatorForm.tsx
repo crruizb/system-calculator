@@ -1,11 +1,13 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { apiFetchAuth } from "../api/client";
+import { useTranslation } from "react-i18next";
 
 export function CalculatorForm() {
   const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
   const isEdit = Boolean(id);
+  const { t } = useTranslation();
 
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
@@ -51,9 +53,7 @@ export function CalculatorForm() {
       navigate("/dashboard");
     } catch (err: unknown) {
       setError(
-        err instanceof Error
-          ? err.message.replace(/^\d+\s/, "")
-          : "Save failed",
+        err instanceof Error ? err.message.replace(/^\d+\s/, "") : t("calcForm.save")
       );
     } finally {
       setLoading(false);
@@ -67,14 +67,12 @@ export function CalculatorForm() {
         style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border-line)' }}
       >
         <h1 className="font-display text-3xl mb-8">
-          {isEdit ? "Edit Calculator" : "New Calculator"}
+          {isEdit ? t("calcForm.titleEdit") : t("calcForm.titleNew")}
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm mb-1">
-              Name
-            </label>
+            <label htmlFor="name" className="block text-sm mb-1">{t("calcForm.name")}</label>
             <input
               id="name"
               required
@@ -85,18 +83,14 @@ export function CalculatorForm() {
           </div>
           {!isEdit && (
             <div>
-              <label htmlFor="slug" className="block text-sm mb-1">
-                Slug
-              </label>
+              <label htmlFor="slug" className="block text-sm mb-1">{t("calcForm.slug")}</label>
               <input
                 id="slug"
                 required
                 pattern="^[a-z0-9-]{2,63}$"
                 value={slug}
                 onChange={(e) =>
-                  setSlug(
-                    e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"),
-                  )
+                  setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))
                 }
                 className="w-full px-4 py-2 rounded-lg bg-[var(--color-bg)] border border-[var(--color-gold)]/30 focus:outline-none focus:border-[var(--color-gold)]"
               />
@@ -104,7 +98,7 @@ export function CalculatorForm() {
           )}
           <div>
             <label htmlFor="sheetUrl" className="flex items-center justify-between text-sm mb-1">
-              <span>Google Sheet URL</span>
+              <span>{t("calcForm.sheetUrl")}</span>
               <a
                 href="/guide"
                 target="_blank"
@@ -112,7 +106,7 @@ export function CalculatorForm() {
                 className="text-xs transition-colors"
                 style={{ color: 'var(--color-gold)' }}
               >
-                How do I get this URL?
+                {t("calcForm.sheetUrlHelp")}
               </a>
             </label>
             <input
@@ -126,9 +120,7 @@ export function CalculatorForm() {
           </div>
           <div className="flex gap-4">
             <div className="flex-1">
-              <label htmlFor="currency" className="block text-sm mb-1">
-                Currency symbol
-              </label>
+              <label htmlFor="currency" className="block text-sm mb-1">{t("calcForm.currency")}</label>
               <input
                 id="currency"
                 value={currency}
@@ -137,9 +129,7 @@ export function CalculatorForm() {
               />
             </div>
             <div className="flex-1">
-              <label htmlFor="locale" className="block text-sm mb-1">
-                Locale (e.g. es-ES)
-              </label>
+              <label htmlFor="locale" className="block text-sm mb-1">{t("calcForm.locale")}</label>
               <input
                 id="locale"
                 value={locale}
@@ -156,7 +146,7 @@ export function CalculatorForm() {
             disabled={loading}
             className="w-full py-3 rounded-lg bg-[var(--color-gold)] text-white font-semibold hover:bg-[var(--color-gold-muted)] transition-colors disabled:opacity-50"
           >
-            {loading ? "Saving…" : isEdit ? "Save Changes" : "Create"}
+            {loading ? t("calcForm.saving") : isEdit ? t("calcForm.save") : t("calcForm.create")}
           </button>
         </form>
       </div>

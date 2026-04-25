@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiFetchAuth } from "../api/client";
+import { useTranslation } from "react-i18next";
 
 interface Calculator {
   id: string;
@@ -16,6 +17,7 @@ interface Calculator {
 export function Dashboard() {
   const [calculators, setCalculators] = useState<Calculator[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     apiFetchAuth<Calculator[]>("/api/calculators")
@@ -31,7 +33,7 @@ export function Dashboard() {
   if (loading)
     return (
       <div className="flex items-center justify-center py-20">
-        <span style={{ color: 'var(--color-text-muted)' }}>Loading…</span>
+        <span style={{ color: 'var(--color-text-muted)' }}>{t("dashboard.loading")}</span>
       </div>
     );
 
@@ -39,7 +41,7 @@ export function Dashboard() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <h1 className="font-display text-3xl" style={{ color: 'var(--color-text-primary)' }}>
-          My Calculators
+          {t("dashboard.title")}
         </h1>
         <div className="flex items-center gap-3">
           <Link
@@ -47,29 +49,29 @@ export function Dashboard() {
             className="text-sm transition-colors"
             style={{ color: 'var(--color-text-muted)' }}
           >
-            Guide
+            {t("dashboard.guide")}
           </Link>
-        <Link
-          to="/dashboard/new"
-          className="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors"
-          style={{ background: 'var(--color-gold)' }}
-          onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-gold-muted)')}
-          onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-gold)')}
-        >
-          + New Calculator
-        </Link>
+          <Link
+            to="/dashboard/new"
+            className="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors"
+            style={{ background: 'var(--color-gold)' }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-gold-muted)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-gold)')}
+          >
+            {t("dashboard.newCalc")}
+          </Link>
         </div>
       </div>
 
       {calculators.length === 0 && (
         <div className="text-center py-20">
-          <p className="mb-2" style={{ color: 'var(--color-text-muted)' }}>No calculators yet.</p>
+          <p className="mb-2" style={{ color: 'var(--color-text-muted)' }}>{t("dashboard.empty")}</p>
           <Link
             to="/guide"
             className="text-sm transition-colors"
             style={{ color: 'var(--color-gold)' }}
           >
-            See how to set up your Google Sheet →
+            {t("dashboard.emptyGuide")}
           </Link>
         </div>
       )}
@@ -102,20 +104,20 @@ export function Dashboard() {
                 onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text-primary)')}
                 onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}
               >
-                View ↗
+                {t("dashboard.view")}
               </a>
               <Link
                 to={`/dashboard/${c.id}`}
                 className="transition-colors"
                 style={{ color: 'var(--color-gold)' }}
               >
-                Edit
+                {t("dashboard.edit")}
               </Link>
               <button
                 onClick={() => handleDelete(c.id)}
                 className="ml-auto text-red-400 hover:text-red-300 transition-colors"
               >
-                Delete
+                {t("dashboard.delete")}
               </button>
             </div>
           </li>

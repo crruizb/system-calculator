@@ -8,7 +8,7 @@ export function Watermark() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        PriceCalc
+        Prexario
       </a>
     </div>
   )

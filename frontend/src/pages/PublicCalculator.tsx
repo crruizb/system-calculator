@@ -63,9 +63,14 @@ export function PublicCalculator() {
       <header className="relative text-center px-6 pt-10 pb-6 md:pt-14 md:pb-8">
         {branding.logo
           ? <img src={branding.logo} alt={branding.companyName} className="h-12 mx-auto" />
-          : <img src="/diamond.png" alt="logo" className="h-12 mx-auto" />}
+          : (
+            <svg width="48" height="48" viewBox="0 0 64 64" className="mx-auto" aria-label="Prexario">
+              <rect width="64" height="64" rx="14" fill="var(--color-surface)" stroke="var(--color-border-line)" strokeWidth="1"/>
+              <text x="32" y="47" fontFamily="Georgia, serif" fontSize="44" fontWeight="700" fill="var(--color-gold)" textAnchor="middle">P</text>
+            </svg>
+          )}
         <h1 className="mt-2 font-display text-2xl">
-          {branding.companyName ?? 'Price Calculator'}
+          {branding.companyName ?? 'Prexario'}
         </h1>
         <button
           onClick={toggleTheme}
