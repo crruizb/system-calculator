@@ -7,7 +7,12 @@ interface PriceDisplayProps {
   allSelected: boolean;
 }
 
-export default function PriceDisplay({ price, currency = "€", locale = "es-ES", allSelected }: PriceDisplayProps) {
+export default function PriceDisplay({
+  price,
+  currency = "€",
+  locale = "es-ES",
+  allSelected,
+}: PriceDisplayProps) {
   const prevRef = useRef<string | null>(null);
   const numRef = useRef<HTMLDivElement>(null);
 
@@ -24,7 +29,7 @@ export default function PriceDisplay({ price, currency = "€", locale = "es-ES"
     <div
       className={`p-8 px-7 bg-surface border rounded-md text-center transition-all duration-[400ms] min-h-[120px] flex flex-col items-center justify-center gap-2 ${
         price
-          ? "border-gold-muted shadow-[0_0_40px_rgba(99,102,241,0.12),0_2px_16px_rgba(0,0,0,0.3)]"
+          ? "border-main-muted shadow-[0_0_40px_var(--color-main-ring),0_2px_16px_rgba(0,0,0,0.3)]"
           : "border-border-line"
       }`}
     >
@@ -34,9 +39,14 @@ export default function PriceDisplay({ price, currency = "€", locale = "es-ES"
       <div className="flex items-baseline gap-1" ref={numRef}>
         {price ? (
           <>
-            <span className="font-display text-[2rem] font-light text-gold-muted leading-none">{currency}</span>
-            <span className="font-display text-[4rem] font-semibold leading-none text-gold tracking-[-0.02em]">
-              {parseFloat(price).toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <span className="font-display text-[2rem] font-light text-main-muted leading-none">
+              {currency}
+            </span>
+            <span className="font-display text-[4rem] font-semibold leading-none text-main tracking-[-0.02em]">
+              {parseFloat(price).toLocaleString(locale, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </span>
           </>
         ) : (
@@ -46,7 +56,7 @@ export default function PriceDisplay({ price, currency = "€", locale = "es-ES"
         )}
       </div>
       {price && (
-        <div className="w-10 h-px bg-gradient-to-r from-transparent via-gold-muted to-transparent mt-1" />
+        <div className="w-10 h-px bg-gradient-to-r from-transparent via-main-muted to-transparent mt-1" />
       )}
     </div>
   );
