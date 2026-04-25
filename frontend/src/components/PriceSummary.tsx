@@ -28,7 +28,7 @@ export default function PriceSummary({
   const total = resolved.reduce((a, b) => a + b.value, 0);
 
   return (
-    <div className="animate-fade-up border-t border-gold-dim pt-6 flex flex-col items-center gap-4">
+    <div className="animate-fade-up border-t border-main pt-6 flex flex-col items-center gap-4">
       <p className="font-body text-[0.65rem] tracking-[0.18em] uppercase text-text-muted">
         Total combinado
       </p>
@@ -55,7 +55,7 @@ export default function PriceSummary({
                 ) : null,
               )}
             </div>
-            <span className="font-display text-[1.1rem] font-semibold text-gold whitespace-nowrap self-end sm:self-auto">
+            <span className="font-display text-[1.1rem] font-semibold text-main whitespace-nowrap self-end sm:self-auto">
               {inst.value.toLocaleString(locale, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
@@ -68,17 +68,17 @@ export default function PriceSummary({
 
       {/* Total */}
       <div className="flex items-baseline gap-1">
-        <span className="font-display text-[1.5rem] font-light text-gold-muted leading-none">
+        <span className="font-display text-[1.5rem] font-light text-main-muted leading-none">
           {currency}
         </span>
-        <span className="font-display text-[3rem] font-semibold leading-none text-gold tracking-[-0.02em]">
+        <span className="font-display text-[3rem] font-semibold leading-none text-main tracking-[-0.02em]">
           {total.toLocaleString(locale, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}
         </span>
       </div>
-      <div className="w-10 h-px bg-linear-to-r from-transparent via-gold-muted to-transparent" />
+      <div className="w-10 h-px bg-linear-to-r from-transparent via-main-muted to-transparent" />
       {resolved.length < instances.length && (
         <p className="font-body text-[0.65rem] tracking-[0.12em] text-text-muted">
           {resolved.length} de {instances.length} calculadoras con precio

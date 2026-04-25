@@ -110,7 +110,14 @@
     "locale": "Locale (ej. es-ES)",
     "saving": "Guardando…",
     "save": "Guardar cambios",
-    "create": "Crear"
+    "create": "Crear",
+    "brandingHeading": "Marca",
+    "brandingCompanyName": "Nombre de empresa",
+    "brandingLogo": "URL del logo",
+    "brandingLogoHint": "URL directa a un SVG, PNG o JPG",
+    "brandingColorLight": "Acento modo claro",
+    "brandingColorDark": "Acento modo oscuro",
+    "brandingProLock": "Mejora a Pro para desbloquear →"
   },
   "billing": {
     "title": "Facturación",

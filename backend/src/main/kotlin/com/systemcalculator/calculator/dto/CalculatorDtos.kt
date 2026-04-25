@@ -15,7 +15,8 @@ data class CreateCalculatorRequest(
     @field:NotBlank val name: String,
     @field:NotBlank @field:Pattern(regexp = "^[a-z0-9-]{2,63}$") val slug: String,
     @field:NotBlank val sheetUrl: String,
-    val settings: Map<String, Any> = mapOf("currency" to "€", "locale" to "es-ES")
+    val settings: Map<String, Any> = mapOf("currency" to "€", "locale" to "es-ES"),
+    val branding: Map<String, Any> = emptyMap()
 )
 
 data class UpdateCalculatorRequest(

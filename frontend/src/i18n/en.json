@@ -110,7 +110,14 @@
     "locale": "Locale (e.g. es-ES)",
     "saving": "Saving…",
     "save": "Save Changes",
-    "create": "Create"
+    "create": "Create",
+    "brandingHeading": "Branding",
+    "brandingCompanyName": "Company name",
+    "brandingLogo": "Logo URL",
+    "brandingLogoHint": "Direct URL to an SVG, PNG, or JPG",
+    "brandingColorLight": "Light mode accent",
+    "brandingColorDark": "Dark mode accent",
+    "brandingProLock": "Upgrade to Pro to unlock →"
   },
   "billing": {
     "title": "Billing",

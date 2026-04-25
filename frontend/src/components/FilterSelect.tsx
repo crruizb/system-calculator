@@ -20,7 +20,7 @@ export default function FilterSelect({
       className={`flex flex-col gap-2 transition-opacity duration-[250ms] ${disabled ? "opacity-40 pointer-events-none" : ""}`}
     >
       <label
-        className="font-body text-[0.7rem] font-semibold tracking-[0.15em] uppercase text-gold-muted"
+        className="font-body text-[0.7rem] font-semibold tracking-[0.15em] uppercase text-main-muted"
         htmlFor={`filter-${field}`}
       >
         {label}
@@ -28,7 +28,7 @@ export default function FilterSelect({
       <div className="relative">
         <select
           id={`filter-${field}`}
-          className="appearance-none w-full min-h-14 pl-2 pr-12 bg-surface border border-border-line rounded text-text-primary font-body text-base cursor-pointer transition-all outline-none focus:border-gold focus:shadow-[0_0_0_2px_rgba(99,102,241,0.2)] hover:border-gold-muted hover:bg-surface-hover disabled:cursor-not-allowed"
+          className="appearance-none w-full min-h-14 pl-2 pr-12 bg-surface border border-border-line rounded text-text-primary font-body text-base cursor-pointer transition-all outline-none focus:border-main focus:shadow-[0_0_0_2px_var(--color-main-ring)] hover:border-main-muted hover:bg-surface-hover disabled:cursor-not-allowed"
           value={value || ""}
           onChange={(e) => onChange(field, e.target.value || null)}
           disabled={disabled}
@@ -42,7 +42,7 @@ export default function FilterSelect({
           ))}
         </select>
         <span
-          className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gold-muted text-base leading-none"
+          className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-main-muted text-base leading-none"
           aria-hidden="true"
         >
           ▾

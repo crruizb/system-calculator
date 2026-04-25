@@ -28,6 +28,9 @@ class CalculatorService(private val calculatorRepository: CalculatorRepository) 
         if (calculatorRepository.findByTenantSlugAndSlugAndIsActiveTrue(user.tenant.slug, req.slug) != null)
             throw ResponseStatusException(HttpStatus.CONFLICT, "Slug '${req.slug}' already in use")
 
+        if (req.branding.isNotEmpty() && user.tenant.plan != "pro")
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "Branding requires Pro plan")
+
         val calc = try {
             calculatorRepository.save(
                 Calculator(
@@ -35,7 +38,8 @@ class CalculatorService(private val calculatorRepository: CalculatorRepository) 
                     slug = req.slug,
                     name = req.name,
                     sheetUrl = req.sheetUrl,
-                    settings = req.settings
+                    settings = req.settings,
+                    branding = req.branding
                 )
             )
         } catch (e: DataIntegrityViolationException) {
