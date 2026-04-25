@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
+import { useTranslation } from 'react-i18next'
 
 function SunIcon() {
   return (
@@ -30,6 +31,11 @@ export function TopNavbar() {
   const { logout } = useAuth()
   const { theme, toggleTheme } = useTheme()
   const navigate = useNavigate()
+  const { t, i18n } = useTranslation()
+
+  function toggleLang() {
+    i18n.changeLanguage(i18n.language === 'en' ? 'es' : 'en')
+  }
 
   return (
     <nav
@@ -40,7 +46,6 @@ export function TopNavbar() {
         color: 'var(--color-text-primary)',
       }}
     >
-      {/* Logo */}
       <Link
         to="/dashboard"
         className="flex items-center gap-2 font-semibold text-sm tracking-wide shrink-0"
@@ -52,10 +57,9 @@ export function TopNavbar() {
         >
           P
         </span>
-        <span className="hidden sm:inline">PriceCalc</span>
+        <span className="hidden sm:inline">Prexario</span>
       </Link>
 
-      {/* Nav links */}
       <div className="flex items-center gap-1 flex-1">
         <Link
           to="/dashboard"
@@ -64,7 +68,7 @@ export function TopNavbar() {
           onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text-primary)')}
           onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}
         >
-          Calculators
+          {t('nav.calculators')}
         </Link>
         <Link
           to="/dashboard/billing"
@@ -73,12 +77,18 @@ export function TopNavbar() {
           onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text-primary)')}
           onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}
         >
-          Billing
+          {t('nav.billing')}
         </Link>
       </div>
 
-      {/* Right side */}
       <div className="flex items-center gap-2 shrink-0">
+        <button
+          onClick={toggleLang}
+          className="px-2 py-1 text-xs rounded border transition-colors"
+          style={{ color: 'var(--color-text-muted)', borderColor: 'var(--color-border-line)' }}
+        >
+          {t('lang')}
+        </button>
         <button
           onClick={toggleTheme}
           className="w-8 h-8 flex items-center justify-center rounded transition-colors"
@@ -96,7 +106,7 @@ export function TopNavbar() {
           onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-text-primary)')}
           onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-muted)')}
         >
-          Sign out
+          {t('nav.signOut')}
         </button>
       </div>
     </nav>

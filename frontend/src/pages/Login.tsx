@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { apiFetch } from "../api/client";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 export function Login() {
   const { markLoggedIn } = useAuth();
@@ -14,6 +15,7 @@ export function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -27,7 +29,7 @@ export function Login() {
       markLoggedIn();
       navigate("/dashboard");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Login failed";
+      const msg = err instanceof Error ? err.message : t("login.submit");
       setError(msg.replace(/^\d+\s/, ""));
     } finally {
       setLoading(false);
@@ -60,19 +62,15 @@ export function Login() {
         )}
       </button>
       <div className="w-full max-w-md p-8 rounded-2xl shadow-xl" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border-line)' }}>
-        <h1 className="font-display text-3xl text-center mb-8">Sign In</h1>
+        <h1 className="font-display text-3xl text-center mb-8">{t("login.title")}</h1>
 
         {hasOAuthError && (
-          <p className="mb-4 text-red-400 text-sm text-center">
-            Sign in with Google failed, please try again.
-          </p>
+          <p className="mb-4 text-red-400 text-sm text-center">{t("login.oauthError")}</p>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm mb-1">
-              Email
-            </label>
+            <label htmlFor="email" className="block text-sm mb-1">{t("login.email")}</label>
             <input
               id="email"
               type="email"
@@ -84,9 +82,7 @@ export function Login() {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm mb-1">
-              Password
-            </label>
+            <label htmlFor="password" className="block text-sm mb-1">{t("login.password")}</label>
             <input
               id="password"
               type="password"
@@ -105,7 +101,7 @@ export function Login() {
             disabled={loading}
             className="w-full py-3 rounded-lg bg-[var(--color-gold)] text-white font-semibold hover:bg-[var(--color-gold-muted)] transition-colors disabled:opacity-50"
           >
-            {loading ? "Signing in…" : "Sign In"}
+            {loading ? t("login.submitting") : t("login.submit")}
           </button>
         </form>
 
@@ -114,17 +110,14 @@ export function Login() {
             href="/oauth2/authorization/google"
             className="flex items-center justify-center w-full py-3 rounded-lg border border-[var(--color-gold)]/30 text-sm hover:bg-[var(--color-gold)]/10 transition-colors"
           >
-            Sign in with Google
+            {t("login.google")}
           </a>
         </div>
 
         <div className="mt-4 text-center text-sm text-[var(--color-text-primary)]/60">
-          No account?{" "}
-          <Link
-            to="/register"
-            className="text-[var(--color-gold)] hover:underline"
-          >
-            Register
+          {t("login.noAccount")}{" "}
+          <Link to="/register" className="text-[var(--color-gold)] hover:underline">
+            {t("login.register")}
           </Link>
         </div>
       </div>

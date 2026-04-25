@@ -36,7 +36,7 @@ export function CalculatorMockup({ locale = 'en' }: { locale?: Locale }) {
       boxShadow: '0 2px 16px rgba(99,102,241,0.08)',
     }}>
       <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--color-border-line)', textAlign: 'center' }}>
-        <div style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: 4 }}>Price Calculator</div>
+        <div style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--color-text-muted)', marginBottom: 4 }}>Prexario</div>
         <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-text-primary)' }}>{title}</div>
       </div>
       <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 8 }}>
