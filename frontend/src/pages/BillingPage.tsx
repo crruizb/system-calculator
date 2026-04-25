@@ -31,7 +31,7 @@ export function BillingPage() {
   const planLabel = { free: 'Free', basic: 'Basic', pro: 'Pro' }[tenant?.plan ?? 'free'] ?? 'Free'
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] p-8 max-w-2xl mx-auto">
+    <div className="max-w-2xl">
       <h1 className="font-display text-3xl mb-8">Billing</h1>
 
       <div className="p-6 bg-[var(--color-surface)] rounded-2xl mb-6">

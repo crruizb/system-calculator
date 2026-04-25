@@ -9,6 +9,7 @@ import { apiFetch } from "../api/client";
 
 interface AuthContextValue {
   isLoggedIn: boolean | null;
+  tenantName: string | null;
   markLoggedIn: () => void;
   logout: () => void;
 }
@@ -17,10 +18,14 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const [tenantName, setTenantName] = useState<string | null>(null);
 
   useEffect(() => {
-    apiFetch("/api/tenants/me")
-      .then(() => setIsLoggedIn(true))
+    apiFetch<{ name: string }>("/api/tenants/me")
+      .then((data) => {
+        setIsLoggedIn(true);
+        setTenantName(data.name ?? null);
+      })
       .catch(() => setIsLoggedIn(false));
   }, []);
 
@@ -33,11 +38,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await apiFetch("/api/auth/logout", { method: "POST" });
     } finally {
       setIsLoggedIn(false);
+      setTenantName(null);
     }
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, markLoggedIn, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, tenantName, markLoggedIn, logout }}>
       {children}
     </AuthContext.Provider>
   );

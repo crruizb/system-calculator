@@ -1,46 +1,266 @@
 import { Link } from 'react-router-dom'
+import { useTheme } from '../context/ThemeContext'
+import { useAuth } from '../context/AuthContext'
+import { SheetMockup } from '../components/SheetMockup'
+import { CalculatorMockup } from '../components/CalculatorMockup'
+
+function SunIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+      <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+    </svg>
+  )
+}
+
+function MoonIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  )
+}
+
 
 export function Landing() {
+  const { theme, toggleTheme } = useTheme()
+  const { isLoggedIn, tenantName } = useAuth()
+
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text-primary)]">
-      <header className="max-w-4xl mx-auto px-8 py-12 flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <img src="/diamond.png" alt="logo" className="h-8" />
-          <span className="font-display text-xl">PriceCalc</span>
+    <div
+      data-theme={theme}
+      style={{ minHeight: '100dvh', background: 'var(--color-bg)', color: 'var(--color-text-primary)' }}
+    >
+      {/* Nav */}
+      <header style={{ borderBottom: '1px solid var(--color-border-line)' }}>
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 py-4 flex items-center gap-6">
+          <div className="flex items-center gap-2 flex-1">
+            <span
+              className="w-7 h-7 rounded flex items-center justify-center text-white text-xs font-bold"
+              style={{ background: 'var(--color-gold)' }}
+            >P</span>
+            <span className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>PriceCalc</span>
+          </div>
+          <nav className="flex items-center gap-2">
+            {!isLoggedIn && (
+              <Link
+                to="/guide"
+                className="px-3 py-1.5 text-sm rounded transition-colors"
+                style={{ color: 'var(--color-text-muted)' }}
+              >
+                Guide
+              </Link>
+            )}
+            {isLoggedIn === false && (
+              <Link
+                to="/login"
+                className="px-3 py-1.5 text-sm rounded transition-colors"
+                style={{ color: 'var(--color-text-muted)' }}
+              >
+                Sign in
+              </Link>
+            )}
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              className="w-8 h-8 flex items-center justify-center rounded transition-colors"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+            </button>
+            {isLoggedIn === true ? (
+              <Link
+                to="/dashboard"
+                className="px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+                style={{ color: 'var(--color-text-primary)', border: '1px solid var(--color-border-line)' }}
+              >
+                {tenantName ?? 'Dashboard'} →
+              </Link>
+            ) : isLoggedIn === false ? (
+              <Link
+                to="/register"
+                className="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors"
+                style={{ background: 'var(--color-gold)' }}
+              >
+                Get started free
+              </Link>
+            ) : null}
+          </nav>
         </div>
-        <nav className="flex gap-6 text-sm">
-          <Link to="/login" className="hover:text-[var(--color-gold)] transition-colors">Sign in</Link>
-          <Link to="/register" className="px-4 py-2 rounded-lg bg-[var(--color-gold)] text-black font-semibold hover:bg-[var(--color-gold-muted)] transition-colors">
-            Get started free
-          </Link>
-        </nav>
       </header>
 
-      <main className="max-w-3xl mx-auto px-8 py-24 text-center">
-        <h1 className="font-display text-6xl mb-6 leading-tight">
-          Price calculators<br />for any product
+      {/* Hero */}
+      <section className="max-w-3xl mx-auto px-6 sm:px-8 pt-20 pb-16 text-center">
+        <div
+          className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-6 tracking-wide uppercase"
+          style={{ background: 'var(--color-gold-dim)', color: 'var(--color-gold)', border: '1px solid var(--color-gold-muted)' }}
+        >
+          No code required
+        </div>
+        <h1 className="font-display text-5xl sm:text-6xl mb-6 leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+          Turn a Google Sheet<br />into a price calculator
         </h1>
-        <p className="text-lg text-[var(--color-text-primary)]/60 mb-12 max-w-xl mx-auto">
-          Connect a Google Sheet, get a shareable calculator URL. No code required.
+        <p className="text-lg mb-10 max-w-xl mx-auto" style={{ color: 'var(--color-text-muted)' }}>
+          Paste a spreadsheet URL. Get a shareable, embeddable calculator — instantly. Your customers select options, you get the right price every time.
         </p>
-        <Link to="/register"
-          className="inline-block px-8 py-4 rounded-xl bg-[var(--color-gold)] text-black text-lg font-semibold hover:bg-[var(--color-gold-muted)] transition-colors">
-          Start for free
-        </Link>
-      </main>
-
-      <section className="max-w-4xl mx-auto px-8 py-16 grid grid-cols-3 gap-8 text-center">
-        {[
-          { title: 'Connect your sheet', body: 'Paste a Google Sheets export URL. Columns become filter dropdowns automatically.' },
-          { title: 'Share the link', body: 'Each calculator gets a URL you can embed or share directly with customers.' },
-          { title: 'Upgrade for branding', body: 'Remove the watermark and apply your own colors and logo on the Pro plan.' },
-        ].map(({ title, body }) => (
-          <div key={title} className="p-6 bg-[var(--color-surface)] rounded-2xl text-left">
-            <h3 className="font-semibold mb-2">{title}</h3>
-            <p className="text-sm text-[var(--color-text-primary)]/50">{body}</p>
-          </div>
-        ))}
+        <div className="flex items-center justify-center gap-4 flex-wrap">
+          {isLoggedIn === true ? (
+            <Link
+              to="/dashboard"
+              className="px-7 py-3.5 rounded-xl text-base font-semibold transition-colors"
+              style={{ color: 'var(--color-text-primary)', border: '1px solid var(--color-border-line)' }}
+            >
+              Go to dashboard →
+            </Link>
+          ) : isLoggedIn === false ? (
+            <>
+              <Link
+                to="/register"
+                className="px-7 py-3.5 rounded-xl text-base font-semibold text-white transition-colors"
+                style={{ background: 'var(--color-gold)' }}
+              >
+                Start for free
+              </Link>
+              <Link
+                to="/login"
+                className="px-7 py-3.5 rounded-xl text-base font-semibold transition-colors"
+                style={{ color: 'var(--color-text-muted)', border: '1px solid var(--color-border-line)' }}
+              >
+                Sign in →
+              </Link>
+            </>
+          ) : null}
+        </div>
       </section>
+
+      {/* Demo: Sheet → Calculator */}
+      <section className="max-w-5xl mx-auto px-6 sm:px-8 pb-24">
+        <p className="text-center text-sm uppercase tracking-widest mb-10" style={{ color: 'var(--color-text-muted)' }}>
+          How it works
+        </p>
+        <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
+          {/* Sheet */}
+          <div className="flex-1 w-full">
+            <p className="text-xs uppercase tracking-widest mb-3 font-semibold" style={{ color: 'var(--color-text-muted)' }}>
+              1 — Your Google Sheet
+            </p>
+            <SheetMockup locale="en" />
+          </div>
+
+          {/* Arrow */}
+          <div className="flex flex-col items-center gap-2 shrink-0 md:mt-12">
+            <div className="hidden md:flex flex-col items-center gap-1">
+              <div style={{ width: 40, height: 2, background: 'var(--color-gold)', borderRadius: 1 }} />
+              <div style={{ width: 0, height: 0, borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderLeft: '8px solid var(--color-gold)' }} />
+            </div>
+            <span className="text-xs font-semibold" style={{ color: 'var(--color-gold)' }}>→</span>
+            <span className="text-xs hidden md:block" style={{ color: 'var(--color-text-dim)' }}>auto-generated</span>
+          </div>
+
+          {/* Calculator */}
+          <div className="w-full md:w-72 shrink-0">
+            <p className="text-xs uppercase tracking-widest mb-3 font-semibold" style={{ color: 'var(--color-text-muted)' }}>
+              2 — Your calculator
+            </p>
+            <CalculatorMockup locale="en" />
+          </div>
+        </div>
+
+        {/* Callout */}
+        <div
+          className="mt-8 p-4 rounded-xl text-sm text-center"
+          style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border-line)', color: 'var(--color-text-muted)' }}
+        >
+          Each column in your sheet becomes a dropdown filter. Name your price column <strong style={{ color: 'var(--color-text-primary)' }}>price</strong> — it becomes the result. Add a row → new option appears automatically.{' '}
+          <Link to="/guide" style={{ color: 'var(--color-gold)' }}>Step-by-step guide →</Link>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section style={{ borderTop: '1px solid var(--color-border-line)' }}>
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 py-20">
+          <p className="text-center text-sm uppercase tracking-widest mb-12" style={{ color: 'var(--color-text-muted)' }}>
+            Everything you need
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {[
+              {
+                icon: '⚡',
+                title: 'Connect in seconds',
+                body: 'Paste the CSV export URL of any Google Sheet. Columns become filter dropdowns — automatically and in order.',
+              },
+              {
+                icon: '🔗',
+                title: 'Share anywhere',
+                body: 'Each calculator gets its own URL. Embed it on your site, send it to customers, or use it internally.',
+              },
+              {
+                icon: '🎨',
+                title: 'Your brand',
+                body: 'Upgrade to Pro: remove the watermark, apply your logo, and set your own accent color.',
+              },
+            ].map(({ icon, title, body }) => (
+              <div
+                key={title}
+                className="p-6 rounded-2xl"
+                style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border-line)' }}
+              >
+                <div className="text-2xl mb-3">{icon}</div>
+                <h3 className="font-semibold mb-2 text-sm" style={{ color: 'var(--color-text-primary)' }}>{title}</h3>
+                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer CTA */}
+      <section style={{ borderTop: '1px solid var(--color-border-line)' }}>
+        <div className="max-w-3xl mx-auto px-6 sm:px-8 py-20 text-center">
+          <h2 className="font-display text-4xl mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            Ready to simplify your pricing?
+          </h2>
+          <p className="mb-8" style={{ color: 'var(--color-text-muted)' }}>
+            Free plan includes 1 calculator. No credit card required.
+          </p>
+          {isLoggedIn === true ? (
+            <Link
+              to="/dashboard"
+              className="inline-block px-8 py-4 rounded-xl text-base font-semibold transition-colors"
+              style={{ color: 'var(--color-text-primary)', border: '1px solid var(--color-border-line)' }}
+            >
+              Go to dashboard →
+            </Link>
+          ) : (
+            <Link
+              to="/register"
+              className="inline-block px-8 py-4 rounded-xl text-base font-semibold text-white transition-colors"
+              style={{ background: 'var(--color-gold)' }}
+            >
+              Create your first calculator
+            </Link>
+          )}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer style={{ borderTop: '1px solid var(--color-border-line)' }}>
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 py-6 flex items-center justify-between text-xs" style={{ color: 'var(--color-text-dim)' }}>
+          <span>© 2025 PriceCalc</span>
+          <div className="flex gap-4">
+            {isLoggedIn === true ? (
+              <Link to="/dashboard" style={{ color: 'var(--color-text-dim)' }}>Dashboard</Link>
+            ) : (
+              <>
+                <Link to="/login" style={{ color: 'var(--color-text-dim)' }}>Sign in</Link>
+                <Link to="/register" style={{ color: 'var(--color-text-dim)' }}>Register</Link>
+              </>
+            )}
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

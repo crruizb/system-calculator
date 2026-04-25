@@ -1,0 +1,79 @@
+<h2>Calculator Desktop Layout</h2>
+<p class="subtitle">How should the calculator use wider screens? (tablet / desktop)</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="centered-card" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#f1f5f9;padding:16px;border-radius:6px;min-height:160px;display:flex;align-items:center;justify-content:center;">
+        <div style="width:55%;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+          <div style="text-align:center;margin-bottom:12px;">
+            <div style="width:32px;height:32px;background:#e2e8f0;border-radius:50%;margin:0 auto 6px;"></div>
+            <div style="height:8px;background:#e2e8f0;border-radius:3px;width:60%;margin:0 auto;"></div>
+          </div>
+          <div style="height:28px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;margin-bottom:8px;"></div>
+          <div style="height:28px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;margin-bottom:8px;"></div>
+          <div style="height:28px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;margin-bottom:12px;"></div>
+          <div style="background:#1a1a2e;border-radius:4px;height:32px;display:flex;align-items:center;justify-content:center;">
+            <div style="height:8px;background:rgba(255,255,255,0.4);border-radius:3px;width:40%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Centered Card</h3>
+      <p>Single centered column, max-width ~480–560px, elevated card with shadow. Clean focus, feels like a polished product widget. Same on all screen sizes.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="split" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#f1f5f9;padding:16px;border-radius:6px;min-height:160px;display:flex;align-items:center;justify-content:center;">
+        <div style="width:85%;display:flex;gap:10px;">
+          <div style="flex:1;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <div style="font-size:10px;color:#64748b;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;">Configure</div>
+            <div style="height:22px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:3px;margin-bottom:6px;"></div>
+            <div style="height:22px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:3px;margin-bottom:6px;"></div>
+            <div style="height:22px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:3px;"></div>
+          </div>
+          <div style="width:44%;background:#1a1a2e;border-radius:8px;padding:12px;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+            <div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">Total</div>
+            <div style="height:28px;background:rgba(255,255,255,0.15);border-radius:3px;width:70%;margin-bottom:4px;"></div>
+            <div style="height:12px;background:rgba(255,255,255,0.07);border-radius:3px;width:50%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Split: Filters + Price</h3>
+      <p>Two-column on desktop: filters left, price result fixed right. Efficient use of space, result always visible. Collapses to single column on mobile.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="wide-centered" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#f1f5f9;padding:16px;border-radius:6px;min-height:160px;display:flex;align-items:flex-start;justify-content:center;padding-top:20px;">
+        <div style="width:80%;">
+          <div style="text-align:center;margin-bottom:12px;">
+            <div style="width:32px;height:32px;background:#e2e8f0;border-radius:50%;margin:0 auto 6px;"></div>
+            <div style="height:7px;background:#e2e8f0;border-radius:3px;width:50%;margin:0 auto;"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">
+            <div style="height:24px;background:#fff;border:1px solid #e2e8f0;border-radius:4px;"></div>
+            <div style="height:24px;background:#fff;border:1px solid #e2e8f0;border-radius:4px;"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+            <div style="height:24px;background:#fff;border:1px solid #e2e8f0;border-radius:4px;"></div>
+            <div style="height:24px;background:#fff;border:1px solid #e2e8f0;border-radius:4px;"></div>
+          </div>
+          <div style="background:#1a1a2e;border-radius:4px;height:28px;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Wide Centered Grid</h3>
+      <p>Max-width ~800px centered, filters laid out in 2-column grid on desktop. More spacious, uses horizontal space. Price result spans full width below.</p>
+    </div>
+  </div>
+
+</div>
