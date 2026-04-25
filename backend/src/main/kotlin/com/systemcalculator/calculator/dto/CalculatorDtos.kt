@@ -27,6 +27,7 @@ data class UpdateCalculatorRequest(
 
 data class CalculatorResponse(
     val id: String,
+    val tenantSlug: String,
     val slug: String,
     val name: String,
     val sheetUrl: String,

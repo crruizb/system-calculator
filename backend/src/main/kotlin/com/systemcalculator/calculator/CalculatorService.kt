@@ -72,11 +72,14 @@ class CalculatorService(private val calculatorRepository: CalculatorRepository) 
         return PublicCalculatorResponse(calc.sheetUrl, calc.settings, branding)
     }
 
+    fun getOne(user: User, id: UUID): CalculatorResponse =
+        getOwnedCalc(user, id).toResponse()
+
     private fun getOwnedCalc(user: User, id: UUID): Calculator =
         calculatorRepository.findByIdAndTenantIdAndIsActiveTrue(id, user.tenant.id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Calculator not found")
 
     private fun Calculator.toResponse() = CalculatorResponse(
-        id.toString(), slug, name, sheetUrl, settings, branding, isActive
+        id.toString(), tenant.slug, slug, name, sheetUrl, settings, branding, isActive
     )
 }
