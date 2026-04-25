@@ -28,7 +28,7 @@ export default function FilterSelect({
       <div className="relative">
         <select
           id={`filter-${field}`}
-          className="appearance-none w-full min-h-14 pl-2 pr-12 bg-surface border border-border-line rounded text-text-primary font-body text-base cursor-pointer transition-all outline-none focus:border-gold focus:shadow-[0_0_0_2px_rgba(99,102,241,0.2)] hover:border-gold-muted hover:bg-surface-hover disabled:cursor-not-allowed"
+          className="appearance-none w-full min-h-14 pl-2 pr-12 bg-surface border border-border-line rounded text-text-primary font-body text-base cursor-pointer transition-all outline-none focus:border-gold focus:shadow-[0_0_0_2px_var(--color-main-ring)] hover:border-gold-muted hover:bg-surface-hover disabled:cursor-not-allowed"
           value={value || ""}
           onChange={(e) => onChange(field, e.target.value || null)}
           disabled={disabled}

@@ -2,9 +2,9 @@
 @import "tailwindcss";
 
 @theme {
-  --color-gold: #818cf8;
-  --color-gold-muted: #6366f1;
-  --color-gold-dim: #3730a3;
+  --color-main: #818cf8;
+  --color-main-muted: #6366f1;
+  --color-main-dim: #3730a3;
   --color-bg: #080808;
   --color-bg-card: #111111;
   --color-surface: #161616;
@@ -26,9 +26,9 @@
 }
 
 [data-theme="light"] {
-  --color-gold: #6366f1;
-  --color-gold-muted: #4f46e5;
-  --color-gold-dim: #c7d2fe;
+  --color-main: #6366f1;
+  --color-main-muted: #4f46e5;
+  --color-main-dim: #c7d2fe;
   --color-bg: #f8f9fa;
   --color-bg-card: #ffffff;
   --color-surface: #f1f5f9;
@@ -38,6 +38,17 @@
   --color-text-muted: #64748b;
   --color-text-dim: #94a3b8;
   --color-error: #dc2626;
+}
+
+/* Auto-derive muted and ring from --color-main so inline branding overrides cascade */
+:root,
+[data-theme] {
+  --color-main-muted: color-mix(
+    in srgb,
+    var(--color-main) 70%,
+    var(--color-bg)
+  );
+  --color-main-ring: color-mix(in srgb, var(--color-main) 25%, transparent);
 }
 
 @keyframes fadeUp {
@@ -105,7 +116,7 @@
     background-image:
       radial-gradient(
         ellipse 80% 60% at 50% 0%,
-        rgba(99, 102, 241, 0.06) 0%,
+        rgba(201, 168, 76, 0.06) 0%,
         transparent 70%
       ),
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
@@ -139,18 +150,18 @@
 }
 
 .spin-ring span:nth-child(1) {
-  border-top-color: var(--color-gold);
+  border-top-color: var(--color-main);
   animation-delay: 0s;
 }
 
 .spin-ring span:nth-child(2) {
-  border-right-color: var(--color-gold-muted);
+  border-right-color: var(--color-main-muted);
   animation-delay: 0.15s;
   inset: 6px;
 }
 
 .spin-ring span:nth-child(3) {
-  border-bottom-color: var(--color-gold-dim);
+  border-bottom-color: var(--color-main-dim);
   animation-delay: 0.3s;
   inset: 14px;
 }
