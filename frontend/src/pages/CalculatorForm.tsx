@@ -216,7 +216,7 @@ export function CalculatorForm() {
                 style={{ color: "var(--color-text-muted)" }}
               >
                 <Link
-                  to="/billing"
+                  to="/dashboard/billing"
                   className="underline"
                   style={{ color: "var(--color-main)" }}
                 >

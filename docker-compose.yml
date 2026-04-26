@@ -15,18 +15,24 @@ services:
       timeout: 5s
       retries: 5
 
-  # backend:
-  #   build: ./backend
-  #   ports:
-  #     - "8080:8080"
-  #   env_file: .env
-  #   environment:
-  #     DATABASE_URL: jdbc:postgresql://postgres:5432/systemcalculator
-  #     DATABASE_USERNAME: postgres
-  #     DATABASE_PASSWORD: postgres
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/systemcalculator
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+      PREX_GOOGLE_CLIENT_ID: ${PREX_GOOGLE_CLIENT_ID}
+      PREX_GOOGLE_CLIENT_SECRET: ${PREX_GOOGLE_CLIENT_SECRET}
+      PREX_STRIPE_SECRET_KEY: ${PREX_STRIPE_SECRET_KEY}
+      PREX_STRIPE_WEBHOOK_SECRET: ${PREX_STRIPE_WEBHOOK_SECRET}
+      PREX_STRIPE_BASIC_PRICE_ID: ${PREX_STRIPE_BASIC_PRICE_ID}
+      PREX_STRIPE_PRO_PRICE_ID: ${PREX_STRIPE_PRO_PRICE_ID}
+      PREX_APP_BASE_URL: ${PREX_APP_BASE_URL}
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   postgres_data:

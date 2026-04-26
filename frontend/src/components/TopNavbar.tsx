@@ -65,7 +65,7 @@ export function TopNavbar() {
       }}
     >
       <Link
-        to="/dashboard"
+        to="/"
         className="flex items-center gap-2 font-semibold text-sm tracking-wide shrink-0"
         style={{ color: "var(--color-text-primary)" }}
       >
