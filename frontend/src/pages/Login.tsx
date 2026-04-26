@@ -147,7 +147,7 @@ export function Login() {
 
         <div className="mt-6">
           <a
-            href="/oauth2/authorization/google"
+            href={`${import.meta.env.VITE_API_URL ?? ""}/oauth2/authorization/google`}
             className="flex items-center justify-center w-full py-3 rounded-lg border border-[var(--color-main)]/30 text-sm hover:bg-[var(--color-main)]/10 transition-colors"
           >
             {t("login.google")}

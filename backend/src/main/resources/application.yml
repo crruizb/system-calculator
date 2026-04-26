@@ -18,6 +18,7 @@ spring:
             client-id: ${PREX_GOOGLE_CLIENT_ID}
             client-secret: ${PREX_GOOGLE_CLIENT_SECRET}
             scope: openid, email, profile
+            redirect-uri: ${PREX_BACKEND_BASE_URL:http://localhost:8080}/login/oauth2/code/google
 
 app:
   jwt:
