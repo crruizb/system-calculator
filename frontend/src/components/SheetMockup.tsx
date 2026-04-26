@@ -45,7 +45,8 @@ export function SheetMockup({ locale = 'en' }: { locale?: Locale }) {
       boxShadow: '0 2px 12px rgba(0,0,0,0.10)',
       background: '#fff',
     }}>
-      <div style={{ background: '#f8f9fa', borderBottom: '1px solid #e0e0e0', padding: '6px 10px', display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div style={{ overflowX: 'auto' }}>
+      <div style={{ background: '#f8f9fa', borderBottom: '1px solid #e0e0e0', padding: '6px 10px', display: 'flex', alignItems: 'center', gap: 8, minWidth: 380 }}>
         <div style={{ display: 'flex', gap: 4 }}>
           {['#ea4335', '#fbbc04', '#34a853'].map(c => (
             <div key={c} style={{ width: 9, height: 9, borderRadius: '50%', background: c }} />
@@ -53,7 +54,7 @@ export function SheetMockup({ locale = 'en' }: { locale?: Locale }) {
         </div>
         <span style={{ color: '#5f6368', fontSize: 11, marginLeft: 4 }}>{file}</span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: `40px repeat(${cols.length}, 1fr)`, background: '#f8f9fa', borderBottom: '1px solid #e0e0e0' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: `40px repeat(${cols.length}, 1fr)`, background: '#f8f9fa', borderBottom: '1px solid #e0e0e0', minWidth: 380 }}>
         <div style={{ padding: '4px 8px', color: '#999', borderRight: '1px solid #e0e0e0', textAlign: 'center' }} />
         {cols.map((c, i) => (
           <div
@@ -78,6 +79,7 @@ export function SheetMockup({ locale = 'en' }: { locale?: Locale }) {
             gridTemplateColumns: `40px repeat(${cols.length}, 1fr)`,
             borderBottom: '1px solid #f0f0f0',
             background: ri % 2 === 0 ? '#fff' : '#fafafa',
+            minWidth: 380,
           }}
         >
           <div style={{ padding: '3px 8px', color: '#999', borderRight: '1px solid #e0e0e0', textAlign: 'center' }}>{ri + 1}</div>
@@ -97,6 +99,7 @@ export function SheetMockup({ locale = 'en' }: { locale?: Locale }) {
           ))}
         </div>
       ))}
+      </div>
     </div>
   )
 }

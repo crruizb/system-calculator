@@ -39,7 +39,7 @@ export function Register() {
   return (
     <div
       data-theme={theme}
-      className="min-h-screen flex items-center justify-center relative py-8"
+      className="min-h-dvh flex items-center justify-center relative px-4 py-8"
       style={{
         background: "var(--color-bg)",
         color: "var(--color-text-primary)",
@@ -88,7 +88,7 @@ export function Register() {
         )}
       </button>
       <div
-        className="w-full max-w-md p-8 rounded-2xl shadow-xl"
+        className="w-full max-w-md p-5 sm:p-8 rounded-2xl shadow-xl"
         style={{
           background: "var(--color-surface)",
           border: "1px solid var(--color-border-line)",

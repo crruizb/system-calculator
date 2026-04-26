@@ -68,8 +68,8 @@ export function Landing() {
     >
       {/* Nav */}
       <header style={{ borderBottom: "1px solid var(--color-border-line)" }}>
-        <div className="max-w-5xl mx-auto px-6 sm:px-8 py-4 flex items-center gap-6">
-          <div className="flex items-center gap-2 flex-1">
+        <div className="max-w-5xl mx-auto px-4 sm:px-8 py-4 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 shrink-0">
             <span
               className="w-7 h-7 rounded flex items-center justify-center text-white text-xs font-bold"
               style={{ background: "var(--color-main)" }}
@@ -77,17 +77,17 @@ export function Landing() {
               P
             </span>
             <span
-              className="font-semibold text-sm"
+              className="font-semibold text-sm hidden sm:inline"
               style={{ color: "var(--color-text-primary)" }}
             >
               Prexario
             </span>
           </div>
-          <nav className="flex items-center gap-2">
+          <nav className="flex items-center gap-1">
             {!isLoggedIn && (
               <Link
                 to="/guide"
-                className="px-3 py-1.5 text-sm rounded transition-colors"
+                className="hidden sm:block px-3 py-1.5 text-sm rounded transition-colors"
                 style={{ color: "var(--color-text-muted)" }}
               >
                 {t("nav.guide")}
@@ -96,7 +96,7 @@ export function Landing() {
             {isLoggedIn === false && (
               <Link
                 to="/login"
-                className="px-3 py-1.5 text-sm rounded transition-colors"
+                className="hidden sm:block px-3 py-1.5 text-sm rounded transition-colors"
                 style={{ color: "var(--color-text-muted)" }}
               >
                 {t("nav.signIn")}

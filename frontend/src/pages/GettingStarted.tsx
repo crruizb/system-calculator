@@ -72,8 +72,8 @@ export function GettingStarted() {
     >
       {/* Nav */}
       <header style={{ borderBottom: "1px solid var(--color-border-line)" }}>
-        <div className="max-w-5xl mx-auto px-6 sm:px-8 py-4 flex items-center gap-6">
-          <div className="flex items-center gap-2 flex-1">
+        <div className="max-w-5xl mx-auto px-4 sm:px-8 py-4 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 shrink-0">
             <Link to="/" className="flex items-center gap-2">
               <span
                 className="w-7 h-7 rounded flex items-center justify-center text-white text-xs font-bold"
@@ -82,18 +82,18 @@ export function GettingStarted() {
                 P
               </span>
               <span
-                className="font-semibold text-sm"
+                className="font-semibold text-sm hidden sm:inline"
                 style={{ color: "var(--color-text-primary)" }}
               >
                 Prexario
               </span>
             </Link>
           </div>
-          <nav className="flex items-center gap-2">
+          <nav className="flex items-center gap-1">
             {isLoggedIn === false && (
               <Link
                 to="/login"
-                className="px-3 py-1.5 text-sm rounded transition-colors"
+                className="hidden sm:block px-3 py-1.5 text-sm rounded transition-colors"
                 style={{ color: "var(--color-text-muted)" }}
               >
                 {t("nav.signIn")}

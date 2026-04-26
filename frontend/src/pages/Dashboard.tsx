@@ -41,7 +41,7 @@ export function Dashboard() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-8">
         <h1
           className="font-display text-3xl"
           style={{ color: "var(--color-text-primary)" }}

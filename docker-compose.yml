@@ -30,6 +30,7 @@ services:
       PREX_STRIPE_BASIC_PRICE_ID: ${PREX_STRIPE_BASIC_PRICE_ID}
       PREX_STRIPE_PRO_PRICE_ID: ${PREX_STRIPE_PRO_PRICE_ID}
       PREX_APP_BASE_URL: ${PREX_APP_BASE_URL}
+      PREX_FRONTEND_URL: ${PREX_FRONTEND_URL}
     depends_on:
       postgres:
         condition: service_healthy

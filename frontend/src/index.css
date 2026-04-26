@@ -19,7 +19,7 @@
   --font-family-body: "DM Sans", system-ui, sans-serif;
 
   --animate-fade-up: fadeUp 0.5s ease both;
-  --animate-pulse-gold: pulse-gold 3s ease-in-out infinite;
+  --animate-pulse-indigo: pulse-indigo 3s ease-in-out infinite;
   --animate-pop: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   --animate-spin-ring: spin-ring 1.4s cubic-bezier(0.68, -0.55, 0.27, 1.55)
     infinite;
@@ -62,7 +62,7 @@
   }
 }
 
-@keyframes pulse-gold {
+@keyframes pulse-indigo {
   0%,
   100% {
     opacity: 1;
@@ -104,6 +104,7 @@
   html {
     -webkit-tap-highlight-color: transparent;
     text-size-adjust: 100%;
+    overflow-x: hidden;
   }
 
   body {
@@ -113,10 +114,11 @@
     min-height: 100dvh;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
     background-image:
       radial-gradient(
         ellipse 80% 60% at 50% 0%,
-        rgba(201, 168, 76, 0.06) 0%,
+        rgba(99, 102, 241, 0.06) 0%,
         transparent 70%
       ),
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");

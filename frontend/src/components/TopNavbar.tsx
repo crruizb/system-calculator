@@ -57,7 +57,7 @@ export function TopNavbar() {
 
   return (
     <nav
-      className="h-14 flex items-center px-4 sm:px-8 border-b gap-6"
+      className="h-14 flex items-center px-3 sm:px-8 border-b gap-2 sm:gap-6"
       style={{
         background: "var(--color-bg-card)",
         borderColor: "var(--color-border-line)",
@@ -78,10 +78,10 @@ export function TopNavbar() {
         <span className="hidden sm:inline">Prexario</span>
       </Link>
 
-      <div className="flex items-center gap-1 flex-1">
+      <div className="flex items-center gap-0.5 sm:gap-1 flex-1 min-w-0">
         <Link
           to="/dashboard"
-          className="px-3 py-1.5 rounded text-sm transition-colors"
+          className="px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm transition-colors truncate"
           style={{ color: "var(--color-text-muted)" }}
           onMouseEnter={(e) =>
             (e.currentTarget.style.color = "var(--color-text-primary)")
@@ -94,7 +94,7 @@ export function TopNavbar() {
         </Link>
         <Link
           to="/dashboard/billing"
-          className="px-3 py-1.5 rounded text-sm transition-colors"
+          className="px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm transition-colors"
           style={{ color: "var(--color-text-muted)" }}
           onMouseEnter={(e) =>
             (e.currentTarget.style.color = "var(--color-text-primary)")
@@ -107,10 +107,10 @@ export function TopNavbar() {
         </Link>
       </div>
 
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex items-center gap-1 sm:gap-2 shrink-0">
         <button
           onClick={toggleLang}
-          className="px-2 py-1 text-xs rounded border transition-colors"
+          className="px-1.5 sm:px-2 py-1 text-xs rounded border transition-colors"
           style={{
             color: "var(--color-text-muted)",
             borderColor: "var(--color-border-line)",
@@ -120,7 +120,7 @@ export function TopNavbar() {
         </button>
         <button
           onClick={toggleTheme}
-          className="w-8 h-8 flex items-center justify-center rounded transition-colors"
+          className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded transition-colors"
           style={{ color: "var(--color-text-muted)" }}
           aria-label="Toggle theme"
           onMouseEnter={(e) =>
@@ -137,7 +137,7 @@ export function TopNavbar() {
             logout();
             navigate("/login");
           }}
-          className="px-3 py-1.5 rounded text-sm transition-colors"
+          className="px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm transition-colors"
           style={{ color: "var(--color-text-muted)" }}
           onMouseEnter={(e) =>
             (e.currentTarget.style.color = "var(--color-text-primary)")

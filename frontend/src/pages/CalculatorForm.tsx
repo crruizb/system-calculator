@@ -96,7 +96,7 @@ export function CalculatorForm() {
   return (
     <div className="max-w-lg">
       <div
-        className="w-full rounded-2xl p-8"
+        className="w-full rounded-2xl p-5 sm:p-8"
         style={{
           background: "var(--color-surface)",
           border: "1px solid var(--color-border-line)",
@@ -163,7 +163,7 @@ export function CalculatorForm() {
               className={inputClass()}
             />
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <label htmlFor="currency" className="block text-sm mb-1">
                 {t("calcForm.currency")}
@@ -276,7 +276,7 @@ export function CalculatorForm() {
               </div>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
                 <label
                   htmlFor="brandingColorLight"
