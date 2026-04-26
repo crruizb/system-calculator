@@ -1,6 +1,7 @@
 package com.systemcalculator.calculator
 
 import com.systemcalculator.calculator.dto.*
+import com.systemcalculator.subscription.SubscriptionService
 import com.systemcalculator.user.User
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
@@ -10,14 +11,17 @@ import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 @Service
-class CalculatorService(private val calculatorRepository: CalculatorRepository) {
+class CalculatorService(
+    private val calculatorRepository: CalculatorRepository,
+    private val subscriptionService: SubscriptionService
+) {
 
     fun list(user: User): List<CalculatorResponse> =
         calculatorRepository.findByTenantIdAndIsActiveTrue(user.tenant.id).map { it.toResponse() }
 
     @Transactional
     fun create(user: User, req: CreateCalculatorRequest): CalculatorResponse {
-        val plan = user.tenant.plan
+        val plan = subscriptionService.getEffectivePlan(user.tenant)
         val limit = PlanLimits.maxCalculators(plan)
         val current = calculatorRepository.countByTenantIdAndIsActiveTrue(user.tenant.id)
         if (current >= limit)
@@ -28,7 +32,7 @@ class CalculatorService(private val calculatorRepository: CalculatorRepository) 
         if (calculatorRepository.findByTenantSlugAndSlugAndIsActiveTrue(user.tenant.slug, req.slug) != null)
             throw ResponseStatusException(HttpStatus.CONFLICT, "Slug '${req.slug}' already in use")
 
-        if (req.branding.isNotEmpty() && user.tenant.plan != "pro")
+        if (req.branding.isNotEmpty() && plan != "pro")
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "Branding requires Pro plan")
 
         val calc = try {
@@ -55,7 +59,7 @@ class CalculatorService(private val calculatorRepository: CalculatorRepository) 
         req.sheetUrl?.let { calc.sheetUrl = it }
         req.settings?.let { calc.settings = it }
         req.branding?.let {
-            if (user.tenant.plan != "pro")
+            if (subscriptionService.getEffectivePlan(user.tenant) != "pro")
                 throw ResponseStatusException(HttpStatus.FORBIDDEN, "Branding requires Pro plan")
             calc.branding = it
         }
@@ -72,7 +76,7 @@ class CalculatorService(private val calculatorRepository: CalculatorRepository) 
     fun getPublic(tenantSlug: String, calcSlug: String): PublicCalculatorResponse {
         val calc = calculatorRepository.findByTenantSlugAndSlugAndIsActiveTrue(tenantSlug, calcSlug)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Calculator not found")
-        val branding = if (calc.tenant.plan == "pro") calc.branding else emptyMap()
+        val branding = if (subscriptionService.getEffectivePlan(calc.tenant) == "pro") calc.branding else emptyMap()
         return PublicCalculatorResponse(calc.sheetUrl, calc.settings, branding)
     }
 

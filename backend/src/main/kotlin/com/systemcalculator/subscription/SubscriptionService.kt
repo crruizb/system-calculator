@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
+import java.time.Instant
 
 @Service
 class SubscriptionService(
@@ -41,8 +42,12 @@ class SubscriptionService(
                     .setQuantity(1)
                     .build()
             )
-            .putMetadata("tenantId", tenant.id.toString())
-            .putMetadata("plan", plan)
+            .setSubscriptionData(
+                SessionCreateParams.SubscriptionData.builder()
+                    .putMetadata("tenantId", tenant.id.toString())
+                    .putMetadata("plan", plan)
+                    .build()
+            )
             .build()
         return Session.create(params).url
     }
@@ -52,6 +57,7 @@ class SubscriptionService(
             ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "No active subscription found")
         val customerId = sub.stripeSubscriptionId
             ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "No Stripe subscription linked")
+        println("here")
         val stripeCustomerId = com.stripe.model.Subscription.retrieve(customerId).customer
         val params = PortalParams.builder()
             .setCustomer(stripeCustomerId)
@@ -61,7 +67,14 @@ class SubscriptionService(
     }
 
     @Transactional
-    fun handleSubscriptionUpdated(stripeSubscriptionId: String, plan: String, status: String, tenantId: String) {
+    fun handleSubscriptionUpdated(
+        stripeSubscriptionId: String,
+        plan: String,
+        status: String,
+        tenantId: String,
+        currentPeriodEnd: Instant?,
+        cancelAtPeriodEnd: Boolean = false
+    ) {
         val tenant = tenantRepository.findById(java.util.UUID.fromString(tenantId)).orElseThrow {
             IllegalStateException("Tenant $tenantId not found for Stripe subscription $stripeSubscriptionId")
         }
@@ -70,8 +83,22 @@ class SubscriptionService(
         sub.stripeSubscriptionId = stripeSubscriptionId
         sub.plan = plan
         sub.status = status
+        sub.currentPeriodEnd = currentPeriodEnd
+        sub.cancelAtPeriodEnd = cancelAtPeriodEnd
         subscriptionRepository.save(sub)
         tenant.plan = if (status == "active") plan else "free"
         tenantRepository.save(tenant)
+    }
+
+    fun getEffectivePlan(tenant: Tenant): String {
+        val sub = subscriptionRepository.findByTenantId(tenant.id) ?: return "free"
+        val periodEnd = sub.currentPeriodEnd
+        val now = Instant.now()
+        if (sub.status == "active") {
+            if (sub.cancelAtPeriodEnd && periodEnd != null && periodEnd.isBefore(now)) return "free"
+            return sub.plan
+        }
+        if (periodEnd != null && periodEnd.isAfter(now)) return sub.plan
+        return "free"
     }
 }

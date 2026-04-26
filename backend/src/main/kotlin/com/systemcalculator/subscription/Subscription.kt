@@ -16,5 +16,6 @@ class Subscription(
     @Column(nullable = false) var plan: String = "free",
     @Column(nullable = false) var status: String = "active",
     @Column var currentPeriodEnd: Instant? = null,
+    @Column(nullable = false) var cancelAtPeriodEnd: Boolean = false,
     @Column(nullable = false) val createdAt: Instant = Instant.now()
 )

@@ -1,5 +1,6 @@
 package com.systemcalculator.tenant
 
+import com.systemcalculator.subscription.SubscriptionService
 import com.systemcalculator.user.User
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
@@ -8,11 +9,11 @@ data class TenantResponse(val id: String, val slug: String, val name: String, va
 
 @RestController
 @RequestMapping("/api/tenants")
-class TenantController {
+class TenantController(private val subscriptionService: SubscriptionService) {
 
     @GetMapping("/me")
     fun me(@AuthenticationPrincipal user: User): TenantResponse {
         val t = user.tenant
-        return TenantResponse(t.id.toString(), t.slug, t.name, t.plan)
+        return TenantResponse(t.id.toString(), t.slug, t.name, subscriptionService.getEffectivePlan(t))
     }
 }
