@@ -39,10 +39,13 @@ class SecurityConfig(
         http
             .cors { }
             .csrf { it.disable() }
-            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
                 it.requestMatchers(
-                    "/api/auth/**",
+                    "/api/auth/login",
+                    "/api/auth/register",
+                    "/api/auth/logout",
+                    "/api/auth/refresh",
                     "/api/public/**",
                     "/api/webhooks/**",
                     "/oauth2/**",

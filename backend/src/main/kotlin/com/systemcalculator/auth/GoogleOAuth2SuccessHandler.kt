@@ -13,8 +13,11 @@ import org.springframework.stereotype.Component
 @Component
 class GoogleOAuth2SuccessHandler(
     private val authService: AuthService,
-    @Value("\${app.frontend-url}") private val frontendUrl: String
+    @Value("\${app.frontend-url}") private val frontendUrl: String,
+    @Value("\${app.jwt.refresh-expiration-ms}") private val refreshExpirationMs: Long,
 ) : AuthenticationSuccessHandler {
+
+    private val secure get() = frontendUrl.startsWith("https://")
 
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,
@@ -26,17 +29,15 @@ class GoogleOAuth2SuccessHandler(
         val email = oauth2User.getAttribute<String>("email")!!
 
         val user = authService.findOrCreateGoogleUser(googleSub, email)
-        val token = authService.generateToken(user)
+        val pair = authService.issueTokenPair(user)
 
-        val cookie = ResponseCookie.from("token", token)
-            .httpOnly(true)
-            .path("/")
-            .maxAge(86400)
-            .sameSite("Lax")
-            .secure(frontendUrl.startsWith("https://"))
-            .build()
+        response.addHeader(HttpHeaders.SET_COOKIE, ResponseCookie.from("token", pair.accessToken)
+            .httpOnly(true).path("/").maxAge(900).sameSite("Lax").secure(secure).build().toString())
 
-        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString())
+        response.addHeader(HttpHeaders.SET_COOKIE, ResponseCookie.from("refresh_token", pair.refreshToken)
+            .httpOnly(true).path("/api/auth").maxAge(refreshExpirationMs / 1000)
+            .sameSite("Lax").secure(secure).build().toString())
+
         response.sendRedirect("$frontendUrl/dashboard")
     }
 }

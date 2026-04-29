@@ -59,12 +59,14 @@ export function CalculatorForm() {
       slug,
       sheetUrl,
       settings: { currency, locale },
-      branding: {
-        companyName: brandingCompanyName,
-        logo: brandingLogo,
-        primaryColorLight: brandingColorLight,
-        primaryColorDark: brandingColorDark,
-      },
+      ...(isPro && {
+        branding: {
+          companyName: brandingCompanyName,
+          logo: brandingLogo,
+          primaryColorLight: brandingColorLight,
+          primaryColorDark: brandingColorDark,
+        },
+      }),
     };
     try {
       if (isEdit) {

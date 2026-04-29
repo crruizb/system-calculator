@@ -22,18 +22,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [tenantName, setTenantName] = useState<string | null>(null);
   const [tenantPlan, setTenantPlan] = useState<string | null>(null);
 
-  useEffect(() => {
-    apiFetch<{ name: string; plan: string }>("/api/tenants/me")
+  function fetchTenant() {
+    return apiFetch<{ name: string; plan: string }>("/api/tenants/me")
       .then((data) => {
         setIsLoggedIn(true);
         setTenantName(data.name ?? null);
         setTenantPlan(data.plan ?? null);
       })
       .catch(() => setIsLoggedIn(false));
+  }
+
+  useEffect(() => {
+    fetchTenant();
   }, []);
 
   function markLoggedIn() {
-    setIsLoggedIn(true);
+    fetchTenant();
   }
 
   async function logout() {

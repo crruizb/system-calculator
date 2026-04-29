@@ -37,3 +37,5 @@ backend/.env
 *.sw?
 
 .claude/
+.agents/
+skills-lock.json
