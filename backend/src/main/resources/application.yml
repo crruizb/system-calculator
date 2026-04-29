@@ -23,7 +23,7 @@ spring:
 app:
   jwt:
     secret: ${PREX_JWT_SECRET:change-me-to-a-256-bit-secret-in-production}
-    expiration-ms: 5000
+    expiration-ms: 900000
     refresh-expiration-ms: 2592000000
   frontend-url: ${PREX_FRONTEND_URL:http://localhost:5173}
   stripe:

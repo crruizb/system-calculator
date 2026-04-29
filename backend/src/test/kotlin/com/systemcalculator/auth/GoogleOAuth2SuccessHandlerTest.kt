@@ -25,9 +25,9 @@ class GoogleOAuth2SuccessHandlerTest {
     private fun buildHandler(frontendUrl: String = "http://localhost:5173"): Triple<GoogleOAuth2SuccessHandler, AuthService, MockHttpServletResponse> {
         val authService = mock(AuthService::class.java)
         `when`(authService.findOrCreateGoogleUser("sub123", "cristian.ruiz@gmail.com")).thenReturn(userStub)
-        `when`(authService.generateToken(userStub)).thenReturn("jwt-token")
+        `when`(authService.issueTokenPair(userStub)).thenReturn(TokenPair("jwt-token", "refresh-token"))
 
-        val handler = GoogleOAuth2SuccessHandler(authService, frontendUrl)
+        val handler = GoogleOAuth2SuccessHandler(authService, frontendUrl, 2592000000L)
         val response = MockHttpServletResponse()
         return Triple(handler, authService, response)
     }
