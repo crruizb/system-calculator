@@ -12,4 +12,8 @@ interface RefreshTokenRepository : JpaRepository<RefreshToken, UUID> {
     @Modifying
     @Query("DELETE FROM RefreshToken r WHERE r.expiresAt < :cutoff")
     fun deleteExpired(cutoff: Instant): Int
+
+    @Modifying
+    @Query("DELETE FROM RefreshToken r WHERE r.revoked = true AND r.createdAt < :cutoff")
+    fun deleteOldRevoked(cutoff: Instant): Int
 }
