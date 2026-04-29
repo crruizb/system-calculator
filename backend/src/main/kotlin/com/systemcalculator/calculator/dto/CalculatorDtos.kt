@@ -23,7 +23,8 @@ data class UpdateCalculatorRequest(
     val name: String? = null,
     val sheetUrl: String? = null,
     val settings: Map<String, Any>? = null,
-    val branding: Map<String, Any>? = null
+    val branding: Map<String, Any>? = null,
+    val isActive: Boolean? = null
 )
 
 data class CalculatorResponse(

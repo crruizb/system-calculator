@@ -32,6 +32,9 @@ export function PublicCalculator() {
     { id: crypto.randomUUID(), filters: {} },
   ]);
   const [activeTabId, setActiveTabId] = useState<string>(() => instances[0].id);
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
+  const BASE_URL = import.meta.env.VITE_API_URL ?? "";
 
   const filterFields = useMemo(() => getFilterFields(data), [data]);
 
@@ -39,6 +42,48 @@ export function PublicCalculator() {
     () => instances.map((inst) => matchPrice(data, inst.filters, filterFields)),
     [instances, data, filterFields],
   );
+
+  const hasPrices = prices.some((p) => p !== null);
+
+  async function handleDownloadPdf() {
+    setPdfLoading(true);
+    setPdfError(null);
+    try {
+      const res = await fetch(`${BASE_URL}/api/pdf/${tenantSlug}/${calcSlug}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          instances: instances.map((inst, i) => ({
+            filters: inst.filters,
+            price: prices[i],
+          })),
+          currency,
+          locale,
+        }),
+      });
+      if (res.status === 403) {
+        setPdfError(
+          "El propietario de esta calculadora necesita un plan Pro para habilitar esta función.",
+        );
+        return;
+      }
+      if (!res.ok) {
+        setPdfError("Error al generar el PDF. Inténtalo de nuevo.");
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "presupuesto.pdf";
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      setPdfError("Error al generar el PDF. Inténtalo de nuevo.");
+    } finally {
+      setPdfLoading(false);
+    }
+  }
 
   if (configLoading)
     return (
@@ -236,6 +281,24 @@ export function PublicCalculator() {
             currency={currency}
             locale={locale}
           />
+        )}
+
+        {hasPrices && Object.keys(branding).length > 0 && (
+          <div className="flex flex-col items-center gap-2 mt-8">
+            <button
+              onClick={handleDownloadPdf}
+              disabled={pdfLoading}
+              className="px-6 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
+              style={{ background: "var(--color-main)", color: "#fff" }}
+            >
+              {pdfLoading ? "Generando PDF..." : "Descargar PDF"}
+            </button>
+            {pdfError && (
+              <p className="text-xs text-center" style={{ color: "var(--color-text-muted)" }}>
+                {pdfError}
+              </p>
+            )}
+          </div>
         )}
 
         {showWatermark && <Watermark />}

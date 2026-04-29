@@ -16,8 +16,9 @@ class CalculatorService(
     private val subscriptionService: SubscriptionService
 ) {
 
+    @Transactional(readOnly = true)
     fun list(user: User): List<CalculatorResponse> =
-        calculatorRepository.findByTenantIdAndIsActiveTrue(user.tenant.id).map { it.toResponse() }
+        calculatorRepository.findByTenantId(user.tenant.id).map { it.toResponse() }
 
     @Transactional
     fun create(user: User, req: CreateCalculatorRequest): CalculatorResponse {
@@ -29,7 +30,7 @@ class CalculatorService(
                 HttpStatus.FORBIDDEN,
                 "Plan '$plan' allows max $limit calculator(s). Upgrade to add more."
             )
-        if (calculatorRepository.findByTenantSlugAndSlugAndIsActiveTrue(user.tenant.slug, req.slug) != null)
+        if (calculatorRepository.findByTenantSlugAndSlug(user.tenant.slug, req.slug) != null)
             throw ResponseStatusException(HttpStatus.CONFLICT, "Slug '${req.slug}' already in use")
 
         if (req.branding.isNotEmpty() && plan != "pro")
@@ -58,6 +59,7 @@ class CalculatorService(
         req.name?.let { calc.name = it }
         req.sheetUrl?.let { calc.sheetUrl = it }
         req.settings?.let { calc.settings = it }
+        req.isActive?.let { calc.isActive = it }
         req.branding?.let {
             if (subscriptionService.getEffectivePlan(user.tenant) != "pro")
                 throw ResponseStatusException(HttpStatus.FORBIDDEN, "Branding requires Pro plan")
@@ -69,10 +71,10 @@ class CalculatorService(
     @Transactional
     fun delete(user: User, id: UUID) {
         val calc = getOwnedCalc(user, id)
-        calc.isActive = false
-        calculatorRepository.save(calc)
+        calculatorRepository.delete(calc)
     }
 
+    @Transactional(readOnly = true)
     fun getPublic(tenantSlug: String, calcSlug: String): PublicCalculatorResponse {
         val calc = calculatorRepository.findByTenantSlugAndSlugAndIsActiveTrue(tenantSlug, calcSlug)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Calculator not found")
@@ -80,11 +82,12 @@ class CalculatorService(
         return PublicCalculatorResponse(calc.sheetUrl, calc.settings, branding)
     }
 
+    @Transactional(readOnly = true)
     fun getOne(user: User, id: UUID): CalculatorResponse =
         getOwnedCalc(user, id).toResponse()
 
     private fun getOwnedCalc(user: User, id: UUID): Calculator =
-        calculatorRepository.findByIdAndTenantIdAndIsActiveTrue(id, user.tenant.id)
+        calculatorRepository.findByIdAndTenantId(id, user.tenant.id)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Calculator not found")
 
     private fun Calculator.toResponse() = CalculatorResponse(

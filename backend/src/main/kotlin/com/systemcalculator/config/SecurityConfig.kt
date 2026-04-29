@@ -47,6 +47,7 @@ class SecurityConfig(
                     "/api/auth/logout",
                     "/api/auth/refresh",
                     "/api/public/**",
+                    "/api/pdf/**",
                     "/api/webhooks/**",
                     "/oauth2/**",
                     "/login/oauth2/**"

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiFetchAuth } from "../api/client";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../context/AuthContext";
+import { EmbedModal } from "../components/EmbedModal";
 
 interface Calculator {
   id: string;
@@ -17,7 +19,10 @@ interface Calculator {
 export function Dashboard() {
   const [calculators, setCalculators] = useState<Calculator[]>([]);
   const [loading, setLoading] = useState(true);
+  const [embedCalc, setEmbedCalc] = useState<Calculator | null>(null);
   const { t } = useTranslation();
+  const { tenantPlan } = useAuth();
+  const canEmbed = tenantPlan === "basic" || tenantPlan === "pro";
 
   useEffect(() => {
     apiFetchAuth<Calculator[]>("/api/calculators")
@@ -28,6 +33,14 @@ export function Dashboard() {
   async function handleDelete(id: string) {
     await apiFetchAuth(`/api/calculators/${id}`, { method: "DELETE" });
     setCalculators((prev) => prev.filter((c) => c.id !== id));
+  }
+
+  async function handleToggle(calc: Calculator) {
+    const updated = await apiFetchAuth<Calculator>(`/api/calculators/${calc.id}`, {
+      method: "PUT",
+      body: JSON.stringify({ isActive: !calc.isActive }),
+    });
+    setCalculators((prev) => prev.map((c) => (c.id === calc.id ? updated : c)));
   }
 
   if (loading)
@@ -41,6 +54,10 @@ export function Dashboard() {
 
   return (
     <div>
+      {embedCalc && (
+        <EmbedModal calc={embedCalc} onClose={() => setEmbedCalc(null)} />
+      )}
+
       <div className="flex items-center justify-between flex-wrap gap-3 mb-8">
         <h1
           className="font-display text-3xl"
@@ -91,19 +108,33 @@ export function Dashboard() {
         {calculators.map((c) => (
           <li
             key={c.id}
-            className="rounded-xl p-5 flex flex-col gap-4"
+            className="rounded-xl p-5 flex flex-col gap-4 transition-opacity"
             style={{
               background: "var(--color-surface)",
               border: "1px solid var(--color-border-line)",
+              opacity: c.isActive ? 1 : 0.6,
             }}
           >
             <div className="flex-1">
-              <p
-                className="font-semibold mb-1"
-                style={{ color: "var(--color-text-primary)" }}
-              >
-                {c.name}
-              </p>
+              <div className="flex items-center gap-2 mb-1">
+                <p
+                  className="font-semibold"
+                  style={{ color: "var(--color-text-primary)" }}
+                >
+                  {c.name}
+                </p>
+                {!c.isActive && (
+                  <span
+                    className="text-xs px-1.5 py-0.5 rounded font-medium"
+                    style={{
+                      background: "var(--color-border-line)",
+                      color: "var(--color-text-muted)",
+                    }}
+                  >
+                    Inactivo
+                  </span>
+                )}
+              </div>
               <p
                 className="text-xs"
                 style={{ color: "var(--color-text-muted)" }}
@@ -112,7 +143,7 @@ export function Dashboard() {
               </p>
             </div>
             <div
-              className="flex items-center gap-4 text-sm border-t pt-3"
+              className="flex items-center gap-4 text-sm border-t pt-3 flex-wrap"
               style={{ borderColor: "var(--color-border-line)" }}
             >
               <a
@@ -137,6 +168,34 @@ export function Dashboard() {
               >
                 {t("dashboard.edit")}
               </Link>
+              {canEmbed && (
+                <button
+                  onClick={() => setEmbedCalc(c)}
+                  className="transition-colors"
+                  style={{ color: "var(--color-text-muted)" }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "var(--color-text-primary)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "var(--color-text-muted)")
+                  }
+                >
+                  Embed
+                </button>
+              )}
+              <button
+                onClick={() => handleToggle(c)}
+                className="transition-colors"
+                style={{ color: "var(--color-text-muted)" }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "var(--color-text-primary)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "var(--color-text-muted)")
+                }
+              >
+                {c.isActive ? "Desactivar" : "Activar"}
+              </button>
               <button
                 onClick={() => handleDelete(c.id)}
                 className="ml-auto text-red-400 hover:text-red-300 transition-colors"

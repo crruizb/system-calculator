@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 
 class CalculatorControllerTest : BaseIntegrationTest() {
 
@@ -127,6 +128,53 @@ class CalculatorControllerTest : BaseIntegrationTest() {
             status { isOk() }
             jsonPath("$.tenantSlug") { value("calc-tenant-6") }
             jsonPath("$.slug") { value("single") }
+        }
+    }
+
+    @Test
+    fun `toggle isActive hides calculator from public route`() {
+        val token = registerAndGetCookie("calc-toggle@test.com", "calc-toggle-tenant")
+
+        val createResult = mockMvc.post("/api/calculators") {
+            cookie(Cookie("token", token))
+            contentType = MediaType.APPLICATION_JSON
+            content = """{"name":"Toggle Me","slug":"toggle-me","sheetUrl":"https://example.com"}"""
+        }.andReturn()
+        val id = objectMapper.readTree(createResult.response.contentAsString)["id"].asText()
+
+        // public route returns 200 while active
+        mockMvc.get("/api/public/calc-toggle-tenant/toggle-me").andExpect {
+            status { isOk() }
+        }
+
+        // disable
+        mockMvc.put("/api/calculators/$id") {
+            cookie(Cookie("token", token))
+            contentType = MediaType.APPLICATION_JSON
+            content = """{"isActive":false}"""
+        }.andExpect {
+            status { isOk() }
+            jsonPath("$.isActive") { value(false) }
+        }
+
+        // public route returns 404 while inactive
+        mockMvc.get("/api/public/calc-toggle-tenant/toggle-me").andExpect {
+            status { isNotFound() }
+        }
+
+        // re-enable
+        mockMvc.put("/api/calculators/$id") {
+            cookie(Cookie("token", token))
+            contentType = MediaType.APPLICATION_JSON
+            content = """{"isActive":true}"""
+        }.andExpect {
+            status { isOk() }
+            jsonPath("$.isActive") { value(true) }
+        }
+
+        // public route returns 200 again
+        mockMvc.get("/api/public/calc-toggle-tenant/toggle-me").andExpect {
+            status { isOk() }
         }
     }
 }
