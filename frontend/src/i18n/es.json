@@ -111,8 +111,8 @@
     "slug": "Slug",
     "sheetUrl": "URL de hoja de Google",
     "sheetUrlHelp": "¿Cómo obtengo esta URL?",
-    "currency": "Símbolo de moneda",
-    "locale": "Locale (ej. es-ES)",
+    "currency": "Moneda",
+    "locale": "Idioma",
     "saving": "Guardando…",
     "save": "Guardar cambios",
     "create": "Crear",
@@ -123,6 +123,18 @@
     "brandingColorLight": "Acento modo claro",
     "brandingColorDark": "Acento modo oscuro",
     "brandingProLock": "Mejora a Pro para desbloquear →"
+  },
+  "public": {
+    "downloadPdf": "Descargar PDF",
+    "pdfLoading": "Generando PDF…",
+    "pdfError": "Error al generar el PDF. Inténtalo de nuevo.",
+    "pdfProRequired": "El propietario de esta calculadora necesita un plan Pro para habilitar esta función.",
+    "clear": "Limpiar",
+    "remove": "✕ Eliminar",
+    "totalCombined": "Total combinado",
+    "partialPrices": "{{resolved}} de {{total}} calculadoras con precio",
+    "select": "— Seleccionar —",
+    "selectField": "Seleccionar {{field}}"
   },
   "billing": {
     "title": "Facturación",

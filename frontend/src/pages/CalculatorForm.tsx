@@ -170,23 +170,29 @@ export function CalculatorForm() {
               <label htmlFor="currency" className="block text-sm mb-1">
                 {t("calcForm.currency")}
               </label>
-              <input
+              <select
                 id="currency"
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
                 className={inputClass()}
-              />
+              >
+                <option value="€">€ — Euro</option>
+                <option value="$">$ — Dollar</option>
+              </select>
             </div>
             <div className="flex-1">
               <label htmlFor="locale" className="block text-sm mb-1">
                 {t("calcForm.locale")}
               </label>
-              <input
+              <select
                 id="locale"
                 value={locale}
                 onChange={(e) => setLocale(e.target.value)}
                 className={inputClass()}
-              />
+              >
+                <option value="es-ES">Español</option>
+                <option value="en-US">English</option>
+              </select>
             </div>
           </div>
 

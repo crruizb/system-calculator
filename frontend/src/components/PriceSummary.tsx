@@ -1,3 +1,5 @@
+import { calcT } from "../utils/calcT";
+
 interface InstanceSummary {
   filters: Record<string, string | undefined>;
   price: string | null;
@@ -16,6 +18,8 @@ export default function PriceSummary({
   currency = "€",
   locale = "es-ES",
 }: PriceSummaryProps) {
+  const t = calcT(locale ?? "es-ES");
+
   const resolved = instances
     .map((inst) => ({
       filters: inst.filters,
@@ -30,7 +34,7 @@ export default function PriceSummary({
   return (
     <div className="animate-fade-up border-t border-main pt-6 flex flex-col items-center gap-4">
       <p className="font-body text-[0.65rem] tracking-[0.18em] uppercase text-text-muted">
-        Total combinado
+        {t("public.totalCombined")}
       </p>
 
       {/* Per-instance breakdown */}
@@ -81,7 +85,7 @@ export default function PriceSummary({
       <div className="w-10 h-px bg-linear-to-r from-transparent via-main-muted to-transparent" />
       {resolved.length < instances.length && (
         <p className="font-body text-[0.65rem] tracking-[0.12em] text-text-muted">
-          {resolved.length} de {instances.length} calculadoras con precio
+          {t("public.partialPrices", { resolved: resolved.length, total: instances.length })}
         </p>
       )}
     </div>

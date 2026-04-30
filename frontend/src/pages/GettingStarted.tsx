@@ -5,6 +5,7 @@ import { useTranslation, Trans } from "react-i18next";
 import { SheetMockup } from "../components/SheetMockup";
 import { CalculatorMockup } from "../components/CalculatorMockup";
 import { PublishDialogMockup } from "../components/PublishDialogMockup";
+import { useSeo } from "../hooks/useSeo";
 
 function SunIcon() {
   return (
@@ -60,6 +61,41 @@ export function GettingStarted() {
 
   const step1Rules = t("guide.step1Rules", { returnObjects: true }) as string[];
   const step2Steps = t("guide.step2Steps", { returnObjects: true }) as string[];
+
+  useSeo({
+    title: "Cómo crear una calculadora de precios desde Google Sheets — Guía | Prexario",
+    description:
+      "Aprende en 3 pasos cómo conectar Google Sheets a Prexario y crear tu calculadora de precios en minutos. Sin instalaciones, sin código.",
+    canonical: "https://prexario.app/guide",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      name: "Cómo crear una calculadora de precios desde Google Sheets",
+      description:
+        "Aprende a conectar tu hoja de Google Sheets con Prexario para generar una calculadora de precios compartible en 3 pasos.",
+      inLanguage: "es",
+      step: [
+        {
+          "@type": "HowToStep",
+          position: 1,
+          name: "Crea tu hoja de Google",
+          text: "Prepara una hoja de cálculo donde cada fila define una combinación de precio. Cada columna (excepto 'price') se convierte en un filtro.",
+        },
+        {
+          "@type": "HowToStep",
+          position: 2,
+          name: "Publícala como CSV",
+          text: "Abre la hoja → Archivo → Compartir → Publicar en la web. Selecciona CSV y copia la URL.",
+        },
+        {
+          "@type": "HowToStep",
+          position: 3,
+          name: "Crea tu calculadora en Prexario",
+          text: "En tu panel, haz clic en + Nueva calculadora, pega la URL CSV y haz clic en Crear.",
+        },
+      ],
+    },
+  });
 
   return (
     <div

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { calcT } from "../utils/calcT";
 import { useTheme } from "../context/ThemeContext";
 import { useTenantCalculator } from "../hooks/useTenantCalculator";
 import { useSheetData } from "../hooks/useSheetData";
@@ -8,6 +9,7 @@ import PriceSummary from "../components/PriceSummary";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { Watermark } from "../components/Watermark";
 import { getFilterFields, matchPrice } from "../utils/filters";
+import { useSeo } from "../hooks/useSeo";
 
 type Filters = Record<string, string | undefined>;
 
@@ -35,6 +37,7 @@ export function PublicCalculator() {
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
   const BASE_URL = import.meta.env.VITE_API_URL ?? "";
+  const t = calcT((config?.settings?.locale as string | undefined) ?? "es-ES");
 
   const filterFields = useMemo(() => getFilterFields(data), [data]);
 
@@ -62,13 +65,11 @@ export function PublicCalculator() {
         }),
       });
       if (res.status === 403) {
-        setPdfError(
-          "El propietario de esta calculadora necesita un plan Pro para habilitar esta función.",
-        );
+        setPdfError(t("public.pdfProRequired"));
         return;
       }
       if (!res.ok) {
-        setPdfError("Error al generar el PDF. Inténtalo de nuevo.");
+        setPdfError(t("public.pdfError"));
         return;
       }
       const blob = await res.blob();
@@ -79,11 +80,24 @@ export function PublicCalculator() {
       a.click();
       URL.revokeObjectURL(url);
     } catch {
-      setPdfError("Error al generar el PDF. Inténtalo de nuevo.");
+      setPdfError(t("public.pdfError"));
     } finally {
       setPdfLoading(false);
     }
   }
+
+  const seoCompany = (config?.branding?.companyName as string | undefined) ?? "";
+  const seoTitle = seoCompany
+    ? `${seoCompany} — Calculadora de precios | Prexario`
+    : "Calculadora de precios | Prexario";
+  const seoDescription = seoCompany
+    ? `Calcula el precio de ${seoCompany} fácilmente. Selecciona tus opciones y obtén tu presupuesto al instante.`
+    : "Calcula tu precio al instante. Selecciona tus opciones y obtén un presupuesto en segundos.";
+  useSeo({
+    title: seoTitle,
+    description: seoDescription,
+    noindex: !seoCompany,
+  });
 
   if (configLoading)
     return (
@@ -291,7 +305,7 @@ export function PublicCalculator() {
               className="px-6 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
               style={{ background: "var(--color-main)", color: "#fff" }}
             >
-              {pdfLoading ? "Generando PDF..." : "Descargar PDF"}
+              {pdfLoading ? t("public.pdfLoading") : t("public.downloadPdf")}
             </button>
             {pdfError && (
               <p className="text-xs text-center" style={{ color: "var(--color-text-muted)" }}>

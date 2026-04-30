@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useTranslation, Trans } from "react-i18next";
 import { SheetMockup } from "../components/SheetMockup";
 import { CalculatorMockup } from "../components/CalculatorMockup";
+import { useSeo } from "../hooks/useSeo";
 
 function SunIcon() {
   return (
@@ -56,6 +57,35 @@ export function Landing() {
   function toggleLang() {
     i18n.changeLanguage(locale === "en" ? "es" : "en");
   }
+
+  useSeo({
+    title: "Prexario — Calculadora de precios desde Google Sheets",
+    description:
+      "Convierte tu hoja de cálculo de Google en una calculadora de precios compartible al instante. Sin código. Ideal para autónomos y empresas en España.",
+    canonical: "https://prexario.app/",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "Prexario",
+      url: "https://prexario.app",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web Browser",
+      inLanguage: "es",
+      description:
+        "Crea calculadoras de precios personalizadas desde hojas de cálculo de Google. Sin código.",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "EUR",
+        description: "Plan gratuito disponible",
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "Prexario",
+        url: "https://prexario.app",
+      },
+    },
+  });
 
   return (
     <div

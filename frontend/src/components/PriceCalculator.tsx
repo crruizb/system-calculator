@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { SheetRow, getFilteredValues, matchPrice } from "../utils/filters";
 import FilterSelect from "./FilterSelect";
 import PriceDisplay from "./PriceDisplay";
+import { calcT } from "../utils/calcT";
 
 interface PriceCalculatorProps {
   instanceId: string;
@@ -26,6 +27,8 @@ export default function PriceCalculator({
   currency,
   locale,
 }: PriceCalculatorProps) {
+  const t = calcT(locale ?? "es-ES");
+
   const handleChange = (field: string, value: string | null) => {
     const next = { ...filters, [field]: value ?? undefined };
     const idx = filterFields.indexOf(field);
@@ -62,6 +65,7 @@ export default function PriceCalculator({
               options={options}
               onChange={handleChange}
               disabled={isLocked}
+              locale={locale}
             />
           );
         })}
@@ -76,17 +80,15 @@ export default function PriceCalculator({
             className="min-h-13 px-4 rounded font-body text-[0.85rem] font-medium tracking-[0.06em] uppercase cursor-pointer transition-all border border-border-line bg-transparent text-text-muted hover:border-text-muted hover:text-text-primary disabled:opacity-30 disabled:cursor-not-allowed"
             onClick={() => onFiltersChange(instanceId, {})}
             disabled={Object.keys(filters).length === 0}
-            aria-label="Limpiar selección"
           >
-            Limpiar
+            {t("public.clear")}
           </button>
           {showRemove && (
             <button
               className="min-h-13 px-4 rounded font-body text-[0.85rem] font-medium tracking-[0.06em] uppercase cursor-pointer transition-all border border-border-line bg-transparent text-text-muted hover:border-text-muted hover:text-text-primary"
               onClick={() => onRemove(instanceId)}
-              aria-label="Eliminar calculadora"
             >
-              ✕ Eliminar
+              {t("public.remove")}
             </button>
           )}
         </div>

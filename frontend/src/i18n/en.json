@@ -111,8 +111,8 @@
     "slug": "Slug",
     "sheetUrl": "Google Sheet URL",
     "sheetUrlHelp": "How do I get this URL?",
-    "currency": "Currency symbol",
-    "locale": "Locale (e.g. es-ES)",
+    "currency": "Currency",
+    "locale": "Language",
     "saving": "Saving…",
     "save": "Save Changes",
     "create": "Create",
@@ -123,6 +123,18 @@
     "brandingColorLight": "Light mode accent",
     "brandingColorDark": "Dark mode accent",
     "brandingProLock": "Upgrade to Pro to unlock →"
+  },
+  "public": {
+    "downloadPdf": "Download PDF",
+    "pdfLoading": "Generating PDF…",
+    "pdfError": "Error generating PDF. Please try again.",
+    "pdfProRequired": "The calculator owner needs a Pro plan to enable this feature.",
+    "clear": "Clear",
+    "remove": "✕ Remove",
+    "totalCombined": "Combined total",
+    "partialPrices": "{{resolved}} of {{total}} calculators with price",
+    "select": "— Select —",
+    "selectField": "Select {{field}}"
   },
   "billing": {
     "title": "Billing",

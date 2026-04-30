@@ -1,9 +1,12 @@
+import { calcT } from "../utils/calcT";
+
 interface FilterSelectProps {
   field: string;
   value: string;
   options: string[];
   onChange: (field: string, value: string | null) => void;
   disabled?: boolean;
+  locale?: string;
 }
 
 export default function FilterSelect({
@@ -12,7 +15,9 @@ export default function FilterSelect({
   options,
   onChange,
   disabled,
+  locale,
 }: FilterSelectProps) {
+  const t = calcT(locale ?? "es-ES");
   const label = field.charAt(0).toUpperCase() + field.slice(1);
 
   return (
@@ -32,9 +37,9 @@ export default function FilterSelect({
           value={value || ""}
           onChange={(e) => onChange(field, e.target.value || null)}
           disabled={disabled}
-          aria-label={`Seleccionar ${label}`}
+          aria-label={t("public.selectField", { field: label })}
         >
-          <option value="">— Seleccionar —</option>
+          <option value="">{t("public.select")}</option>
           {options.map((opt) => (
             <option key={opt} value={opt}>
               {opt}
