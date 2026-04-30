@@ -19,6 +19,20 @@ function renderDashboard() {
   );
 }
 
+function makeCalc(overrides = {}) {
+  return {
+    id: "1",
+    name: "Diamond Ring",
+    slug: "diamond-ring",
+    tenantSlug: "my-tenant",
+    sheetUrl: "https://example.com",
+    settings: {},
+    branding: {},
+    isActive: true,
+    ...overrides,
+  };
+}
+
 describe("Dashboard", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -174,6 +188,173 @@ describe("Dashboard", () => {
     );
     await waitFor(() =>
       expect(screen.queryByText("Diamond Ring")).not.toBeInTheDocument(),
+    );
+  });
+
+  it("shows duplicate button when not at limit", async () => {
+    vi.spyOn(client, "apiFetch").mockResolvedValue({
+      slug: "my-tenant",
+      plan: "basic",
+    });
+    vi.spyOn(client, "apiFetchAuth").mockResolvedValue([makeCalc()]);
+    renderDashboard();
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: /duplicate/i })).toBeInTheDocument(),
+    );
+  });
+
+  it("does NOT show duplicate button when at limit", async () => {
+    vi.spyOn(client, "apiFetch").mockResolvedValue({
+      slug: "my-tenant",
+      plan: "free",
+    });
+    vi.spyOn(client, "apiFetchAuth").mockResolvedValue([
+      makeCalc({ id: "1" }),
+    ]);
+    renderDashboard();
+    await waitFor(() =>
+      expect(screen.getByText("Diamond Ring")).toBeInTheDocument(),
+    );
+    expect(
+      screen.queryByRole("button", { name: /duplicate/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("opens duplicate dialog with pre-filled values", async () => {
+    vi.spyOn(client, "apiFetch").mockResolvedValue({
+      slug: "my-tenant",
+      plan: "basic",
+    });
+    vi.spyOn(client, "apiFetchAuth").mockResolvedValue([makeCalc()]);
+    renderDashboard();
+    await userEvent.click(
+      await screen.findByRole("button", { name: /duplicate/i }),
+    );
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(
+      screen.getByDisplayValue("Diamond Ring (copy)"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByDisplayValue("diamond-ring-copy"),
+    ).toBeInTheDocument();
+  });
+
+  it("calls POST with user-edited name and slug when duplicating", async () => {
+    const apiFetchAuthMock = vi
+      .spyOn(client, "apiFetchAuth")
+      .mockResolvedValueOnce([makeCalc()])
+      .mockResolvedValueOnce({ id: "2", ...makeCalc({ id: "2" }) });
+    vi.spyOn(client, "apiFetch").mockResolvedValue({
+      slug: "my-tenant",
+      plan: "basic",
+    });
+    renderDashboard();
+    await userEvent.click(
+      await screen.findByRole("button", { name: /duplicate/i }),
+    );
+
+    const nameInput = screen.getByDisplayValue("Diamond Ring (copy)");
+    await userEvent.clear(nameInput);
+    await userEvent.type(nameInput, "Gold Ring");
+
+    const slugInput = screen.getByDisplayValue("diamond-ring-copy");
+    await userEvent.clear(slugInput);
+    await userEvent.type(slugInput, "gold-ring");
+
+    const dialog = screen.getByRole("dialog");
+    await userEvent.click(within(dialog).getByRole("button", { name: /^duplicate$/i }));
+
+    await waitFor(() =>
+      expect(apiFetchAuthMock).toHaveBeenCalledWith(
+        "/api/calculators",
+        expect.objectContaining({
+          method: "POST",
+          body: JSON.stringify({
+            name: "Gold Ring",
+            slug: "gold-ring",
+            sheetUrl: "https://example.com",
+            settings: {},
+          }),
+        }),
+      ),
+    );
+  });
+
+  it("sends branding in duplicate when user is Pro", async () => {
+    const apiFetchAuthMock = vi
+      .spyOn(client, "apiFetchAuth")
+      .mockResolvedValueOnce([
+        makeCalc({ branding: { companyName: "Acme" } }),
+      ])
+      .mockResolvedValueOnce({ id: "2", ...makeCalc({ id: "2" }) });
+    vi.spyOn(client, "apiFetch").mockResolvedValue({
+      slug: "my-tenant",
+      plan: "pro",
+    });
+    renderDashboard();
+    await userEvent.click(
+      await screen.findByRole("button", { name: /duplicate/i }),
+    );
+    const dialog = screen.getByRole("dialog");
+    await userEvent.click(within(dialog).getByRole("button", { name: /^duplicate$/i }));
+
+    await waitFor(() =>
+      expect(apiFetchAuthMock).toHaveBeenCalledWith(
+        "/api/calculators",
+        expect.objectContaining({
+          method: "POST",
+          body: expect.stringContaining('"branding"'),
+        }),
+      ),
+    );
+  });
+
+  it("does NOT send branding in duplicate when user is not Pro", async () => {
+    const apiFetchAuthMock = vi
+      .spyOn(client, "apiFetchAuth")
+      .mockResolvedValueOnce([
+        makeCalc({ branding: { companyName: "Acme" } }),
+      ])
+      .mockResolvedValueOnce({ id: "2", ...makeCalc({ id: "2" }) });
+    vi.spyOn(client, "apiFetch").mockResolvedValue({
+      slug: "my-tenant",
+      plan: "basic",
+    });
+    renderDashboard();
+    await userEvent.click(
+      await screen.findByRole("button", { name: /duplicate/i }),
+    );
+    const dialog = screen.getByRole("dialog");
+    await userEvent.click(within(dialog).getByRole("button", { name: /^duplicate$/i }));
+
+    await waitFor(() =>
+      expect(apiFetchAuthMock).toHaveBeenCalledWith(
+        "/api/calculators",
+        expect.objectContaining({
+          method: "POST",
+          body: expect.not.stringContaining('"branding"'),
+        }),
+      ),
+    );
+  });
+
+  it("shows error in dialog when duplicate API fails", async () => {
+    vi.spyOn(client, "apiFetchAuth")
+      .mockResolvedValueOnce([makeCalc()])
+      .mockRejectedValueOnce(new Error("409 Slug already taken"));
+    vi.spyOn(client, "apiFetch").mockResolvedValue({
+      slug: "my-tenant",
+      plan: "basic",
+    });
+    renderDashboard();
+    await userEvent.click(
+      await screen.findByRole("button", { name: /duplicate/i }),
+    );
+    const dialog = screen.getByRole("dialog");
+    await userEvent.click(within(dialog).getByRole("button", { name: /^duplicate$/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText("Slug already taken")).toBeInTheDocument(),
     );
   });
 });

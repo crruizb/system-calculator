@@ -105,7 +105,12 @@
     "activate": "Activar",
     "usage": "{{count}} de {{max}} calculadoras",
     "limitReached": "Límite del plan alcanzado.",
-    "upgrade": "Mejorar plan →"
+    "upgrade": "Mejorar plan →",
+    "duplicate": "Duplicar",
+    "duplicateTitle": "Duplicar calculadora",
+    "duplicateError": "Error al duplicar la calculadora",
+    "duplicateLimitReached": "Límite de calculadoras alcanzado. Mejora tu plan para duplicar.",
+    "inactive": "Inactivo"
   },
   "confirmDialog": {
     "deleteCalculatorTitle": "Eliminar calculadora",

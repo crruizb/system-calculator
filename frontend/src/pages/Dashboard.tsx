@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { apiFetchAuth } from "../api/client";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { ConfirmDialog } from "../components/ConfirmDialog";
+import { DuplicateDialog } from "../components/DuplicateDialog";
 
 function planLimit(plan: string | null): number {
   if (plan === "pro") return 10;
@@ -30,6 +31,9 @@ export function Dashboard() {
   const { tenantPlan } = useAuth();
   const max = planLimit(tenantPlan);
   const atLimit = calculators.length >= max;
+  const navigate = useNavigate();
+  const [duplicateCalc, setDuplicateCalc] = useState<Calculator | null>(null);
+  const [duplicateError, setDuplicateError] = useState<string | null>(null);
 
   useEffect(() => {
     apiFetchAuth<Calculator[]>("/api/calculators")
@@ -51,6 +55,38 @@ export function Dashboard() {
       },
     );
     setCalculators((prev) => prev.map((c) => (c.id === calc.id ? updated : c)));
+  }
+
+  function openDuplicateDialog(calc: Calculator) {
+    setDuplicateCalc(calc);
+    setDuplicateError(null);
+  }
+
+  async function handleDuplicate(name: string, slug: string) {
+    if (!duplicateCalc) return;
+    setDuplicateError(null);
+    const isPro = tenantPlan === "pro";
+    const body = {
+      name,
+      slug,
+      sheetUrl: duplicateCalc.sheetUrl,
+      settings: duplicateCalc.settings,
+      ...(isPro && { branding: duplicateCalc.branding }),
+    };
+    try {
+      const created = await apiFetchAuth<Calculator>("/api/calculators", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+      setDuplicateCalc(null);
+      navigate(`/dashboard/${created.id}`);
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error
+          ? err.message.replace(/^\d+\s/, "")
+          : t("dashboard.duplicateError");
+      setDuplicateError(msg);
+    }
   }
 
   if (loading)
@@ -151,7 +187,7 @@ export function Dashboard() {
                       color: "var(--color-text-muted)",
                     }}
                   >
-                    Inactivo
+                    {t("dashboard.inactive")}
                   </span>
                 )}
               </div>
@@ -203,6 +239,21 @@ export function Dashboard() {
                   ? t("dashboard.deactivate")
                   : t("dashboard.activate")}
               </button>
+              {!atLimit && (
+                <button
+                  onClick={() => openDuplicateDialog(c)}
+                  className="transition-colors"
+                  style={{ color: "var(--color-text-muted)" }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "var(--color-text-primary)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "var(--color-text-muted)")
+                  }
+                >
+                  {t("dashboard.duplicate")}
+                </button>
+              )}
               <button
                 onClick={() => setConfirmDeleteId(c.id)}
                 className="ml-auto transition-colors"
@@ -226,6 +277,14 @@ export function Dashboard() {
           setConfirmDeleteId(null);
         }}
         onCancel={() => setConfirmDeleteId(null)}
+      />
+      <DuplicateDialog
+        open={duplicateCalc !== null}
+        initialName={duplicateCalc ? `${duplicateCalc.name} (copy)` : ""}
+        initialSlug={duplicateCalc ? `${duplicateCalc.slug}-copy` : ""}
+        onConfirm={handleDuplicate}
+        onCancel={() => setDuplicateCalc(null)}
+        error={duplicateError}
       />
     </div>
   );

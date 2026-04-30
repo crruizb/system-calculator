@@ -105,7 +105,12 @@
     "activate": "Activate",
     "usage": "{{count}} of {{max}} calculators",
     "limitReached": "Plan limit reached.",
-    "upgrade": "Upgrade →"
+    "upgrade": "Upgrade →",
+    "duplicate": "Duplicate",
+    "duplicateTitle": "Duplicate calculator",
+    "duplicateError": "Failed to duplicate calculator",
+    "duplicateLimitReached": "Calculator limit reached. Upgrade to duplicate.",
+    "inactive": "Inactive"
   },
   "confirmDialog": {
     "deleteCalculatorTitle": "Delete calculator",
