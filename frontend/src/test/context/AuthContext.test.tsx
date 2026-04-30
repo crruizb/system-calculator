@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AuthProvider, useAuth } from "../../context/AuthContext";
+import { createTestQueryClient, TestProviders } from "../test-utils";
 import * as client from "../../api/client";
 
 function TestConsumer() {
@@ -24,10 +25,13 @@ describe("AuthContext", () => {
 
   it("shows loading state on mount before auth check completes", async () => {
     vi.spyOn(client, "apiFetch").mockReturnValue(new Promise(() => {}));
+    const queryClient = createTestQueryClient();
     render(
-      <AuthProvider>
-        <TestConsumer />
-      </AuthProvider>,
+      <TestProviders queryClient={queryClient}>
+        <AuthProvider>
+          <TestConsumer />
+        </AuthProvider>
+      </TestProviders>,
     );
     expect(screen.getByTestId("status").textContent).toBe("loading");
   });
@@ -37,10 +41,13 @@ describe("AuthContext", () => {
       slug: "my-tenant",
       plan: "free",
     });
+    const queryClient = createTestQueryClient();
     render(
-      <AuthProvider>
-        <TestConsumer />
-      </AuthProvider>,
+      <TestProviders queryClient={queryClient}>
+        <AuthProvider>
+          <TestConsumer />
+        </AuthProvider>
+      </TestProviders>,
     );
     await waitFor(() =>
       expect(screen.getByTestId("status").textContent).toBe("in"),
@@ -51,39 +58,52 @@ describe("AuthContext", () => {
     vi.spyOn(client, "apiFetch").mockRejectedValue(
       new Error("401 Unauthorized"),
     );
+    const queryClient = createTestQueryClient();
     render(
-      <AuthProvider>
-        <TestConsumer />
-      </AuthProvider>,
+      <TestProviders queryClient={queryClient}>
+        <AuthProvider>
+          <TestConsumer />
+        </AuthProvider>
+      </TestProviders>,
     );
     await waitFor(() =>
       expect(screen.getByTestId("status").textContent).toBe("out"),
     );
   });
 
-  it("markLoggedIn sets isLoggedIn=true synchronously", async () => {
-    vi.spyOn(client, "apiFetch").mockRejectedValue(new Error("401"));
+  it("markLoggedIn sets isLoggedIn=true after re-fetching tenant", async () => {
+    vi.spyOn(client, "apiFetch")
+      .mockRejectedValueOnce(new Error("401"))
+      .mockResolvedValueOnce({ slug: "my-tenant", plan: "free" });
+    const queryClient = createTestQueryClient();
     render(
-      <AuthProvider>
-        <TestConsumer />
-      </AuthProvider>,
+      <TestProviders queryClient={queryClient}>
+        <AuthProvider>
+          <TestConsumer />
+        </AuthProvider>
+      </TestProviders>,
     );
     await waitFor(() =>
       expect(screen.getByTestId("status").textContent).toBe("out"),
     );
     await userEvent.click(screen.getByText("Mark Logged In"));
-    expect(screen.getByTestId("status").textContent).toBe("in");
+    await waitFor(() =>
+      expect(screen.getByTestId("status").textContent).toBe("in"),
+    );
   });
 
   it("logout calls POST /api/auth/logout and sets isLoggedIn=false", async () => {
     const fetchSpy = vi
       .spyOn(client, "apiFetch")
-      .mockResolvedValueOnce({ slug: "my-tenant", plan: "free" }) // session restore
-      .mockResolvedValueOnce(undefined); // logout
+      .mockResolvedValueOnce({ slug: "my-tenant", plan: "free" })
+      .mockResolvedValueOnce(undefined);
+    const queryClient = createTestQueryClient();
     render(
-      <AuthProvider>
-        <TestConsumer />
-      </AuthProvider>,
+      <TestProviders queryClient={queryClient}>
+        <AuthProvider>
+          <TestConsumer />
+        </AuthProvider>
+      </TestProviders>,
     );
     await waitFor(() =>
       expect(screen.getByTestId("status").textContent).toBe("in"),

@@ -6,6 +6,8 @@ import {
   ReactNode,
 } from "react";
 import { apiFetch } from "../api/client";
+import { queryClient } from "../api/queryClient";
+import { tenantKeys } from "../api/queries";
 
 interface AuthContextValue {
   isLoggedIn: boolean | null;
@@ -37,6 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   function markLoggedIn() {
+    void queryClient.invalidateQueries({ queryKey: tenantKeys.me });
     return fetchTenant();
   }
 
@@ -44,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoggedIn(false);
     setTenantName(null);
     setTenantPlan(null);
+    void queryClient.invalidateQueries({ queryKey: tenantKeys.me });
     apiFetch("/api/auth/logout", { method: "POST" }).catch(() => {});
   }
 

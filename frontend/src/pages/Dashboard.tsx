@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { apiFetchAuth } from "../api/client";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { DuplicateDialog } from "../components/DuplicateDialog";
+import { useCalculators } from "../api/queries";
+import { useDeleteCalculator, useToggleCalculator, useDuplicateCalculator } from "../api/mutations";
 
 function planLimit(plan: string | null): number {
   if (plan === "pro") return 10;
@@ -24,37 +25,28 @@ interface Calculator {
 }
 
 export function Dashboard() {
-  const [calculators, setCalculators] = useState<Calculator[]>([]);
-  const [loading, setLoading] = useState(true);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const { t } = useTranslation();
   const { tenantPlan } = useAuth();
   const max = planLimit(tenantPlan);
-  const atLimit = calculators.length >= max;
   const navigate = useNavigate();
   const [duplicateCalc, setDuplicateCalc] = useState<Calculator | null>(null);
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
 
-  useEffect(() => {
-    apiFetchAuth<Calculator[]>("/api/calculators")
-      .then(setCalculators)
-      .finally(() => setLoading(false));
-  }, []);
+  const { data: calculators = [], isLoading: loading } = useCalculators();
+  const deleteMutation = useDeleteCalculator();
+  const toggleMutation = useToggleCalculator();
+  const duplicateMutation = useDuplicateCalculator();
+
+  const atLimit = calculators.length >= max;
 
   async function handleDelete(id: string) {
-    await apiFetchAuth(`/api/calculators/${id}`, { method: "DELETE" });
-    setCalculators((prev) => prev.filter((c) => c.id !== id));
+    await deleteMutation.mutateAsync(id);
+    setConfirmDeleteId(null);
   }
 
-  async function handleToggle(calc: Calculator) {
-    const updated = await apiFetchAuth<Calculator>(
-      `/api/calculators/${calc.id}`,
-      {
-        method: "PUT",
-        body: JSON.stringify({ isActive: !calc.isActive }),
-      },
-    );
-    setCalculators((prev) => prev.map((c) => (c.id === calc.id ? updated : c)));
+  function handleToggle(calc: Calculator) {
+    toggleMutation.mutate(calc);
   }
 
   function openDuplicateDialog(calc: Calculator) {
@@ -74,10 +66,7 @@ export function Dashboard() {
       ...(isPro && { branding: duplicateCalc.branding }),
     };
     try {
-      const created = await apiFetchAuth<Calculator>("/api/calculators", {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
+      const created = await duplicateMutation.mutateAsync(body);
       setDuplicateCalc(null);
       navigate(`/dashboard/${created.id}`);
     } catch (err: unknown) {

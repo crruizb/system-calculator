@@ -5,17 +5,21 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../../context/AuthContext";
 import { Dashboard } from "../../pages/Dashboard";
 import * as client from "../../api/client";
+import { createTestQueryClient, TestProviders } from "../test-utils";
 
 function renderDashboard() {
+  const queryClient = createTestQueryClient();
   return render(
-    <AuthProvider>
-      <MemoryRouter initialEntries={["/dashboard"]}>
-        <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/new" element={<div>New Calculator</div>} />
-        </Routes>
-      </MemoryRouter>
-    </AuthProvider>,
+    <TestProviders queryClient={queryClient}>
+      <AuthProvider>
+        <MemoryRouter initialEntries={["/dashboard"]}>
+          <Routes>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/new" element={<div>New Calculator</div>} />
+          </Routes>
+        </MemoryRouter>
+      </AuthProvider>
+    </TestProviders>,
   );
 }
 
@@ -173,7 +177,8 @@ describe("Dashboard", () => {
           isActive: true,
         },
       ])
-      .mockResolvedValueOnce(undefined); // DELETE response (204 No Content)
+      .mockResolvedValueOnce(undefined)
+      .mockResolvedValueOnce([]);
     vi.spyOn(client, "apiFetch").mockResolvedValue({
       slug: "my-tenant",
       plan: "free",

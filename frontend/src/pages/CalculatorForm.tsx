@@ -1,8 +1,9 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { apiFetchAuth } from "../api/client";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
+import { useCalculator } from "../api/queries";
+import { useCreateCalculator, useUpdateCalculator } from "../api/mutations";
 
 export function CalculatorForm() {
   const navigate = useNavigate();
@@ -22,38 +23,36 @@ export function CalculatorForm() {
   const [brandingColorLight, setBrandingColorLight] = useState("#818cf8");
   const [brandingColorDark, setBrandingColorDark] = useState("#c5def2");
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!isEdit || !id) return;
-    apiFetchAuth<{
-      name: string;
-      slug: string;
-      sheetUrl: string;
-      settings: { currency: string; locale: string };
-      branding: {
-        companyName?: string;
-        logo?: string;
-        primaryColorLight?: string;
-        primaryColorDark?: string;
-      };
-    }>(`/api/calculators/${id}`).then((c) => {
-      setName(c.name);
-      setSlug(c.slug);
-      setSheetUrl(c.sheetUrl);
-      setCurrency(c.settings.currency ?? "€");
-      setLocale(c.settings.locale ?? "es-ES");
-      setBrandingCompanyName(c.branding.companyName ?? "");
-      setBrandingLogo(c.branding.logo ?? "");
-      setBrandingColorLight(c.branding.primaryColorLight ?? "#818cf8");
-      setBrandingColorDark(c.branding.primaryColorDark ?? "#c5def2");
-    });
-  }, [id, isEdit]);
+  const { data: calc } = useCalculator(isEdit ? id : undefined);
+
+  if (isEdit && calc && !name) {
+    setName(calc.name);
+    setSlug(calc.slug);
+    setSheetUrl(calc.sheetUrl);
+    setCurrency((calc.settings as { currency: string })?.currency ?? "€");
+    setLocale((calc.settings as { locale: string })?.locale ?? "es-ES");
+    setBrandingCompanyName(
+      (calc.branding as { companyName?: string })?.companyName ?? "",
+    );
+    setBrandingLogo((calc.branding as { logo?: string })?.logo ?? "");
+    setBrandingColorLight(
+      (calc.branding as { primaryColorLight?: string })?.primaryColorLight ??
+        "#818cf8",
+    );
+    setBrandingColorDark(
+      (calc.branding as { primaryColorDark?: string })?.primaryColorDark ??
+        "#c5def2",
+    );
+  }
+
+  const createMutation = useCreateCalculator();
+  const updateMutation = useUpdateCalculator(id!);
+  const saving = createMutation.isPending || updateMutation.isPending;
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
-    setLoading(true);
     const body = {
       name,
       slug,
@@ -70,15 +69,9 @@ export function CalculatorForm() {
     };
     try {
       if (isEdit) {
-        await apiFetchAuth(`/api/calculators/${id}`, {
-          method: "PUT",
-          body: JSON.stringify(body),
-        });
+        await updateMutation.mutateAsync(body);
       } else {
-        await apiFetchAuth("/api/calculators", {
-          method: "POST",
-          body: JSON.stringify(body),
-        });
+        await createMutation.mutateAsync(body);
       }
       navigate("/dashboard");
     } catch (err: unknown) {
@@ -87,8 +80,6 @@ export function CalculatorForm() {
           ? err.message.replace(/^\d+\s/, "")
           : t("calcForm.save"),
       );
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -340,10 +331,10 @@ export function CalculatorForm() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={saving}
             className="w-full py-3 rounded-lg bg-[var(--color-main)] text-white font-semibold hover:bg-[var(--color-main-muted)] transition-colors disabled:opacity-50"
           >
-            {loading
+            {saving
               ? t("calcForm.saving")
               : isEdit
                 ? t("calcForm.save")

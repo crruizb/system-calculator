@@ -1,4 +1,6 @@
 import { BrowserRouter, Outlet, Routes, Route } from 'react-router-dom'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from './api/queryClient'
 import { AuthProvider } from './context/AuthContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
@@ -23,6 +25,7 @@ function DashboardShell() {
 export default function App() {
   return (
     <ThemeProvider>
+    <QueryClientProvider client={queryClient}>
       <AuthProvider>
       <BrowserRouter>
         <Routes>
@@ -45,6 +48,7 @@ export default function App() {
         </Routes>
       </BrowserRouter>
       </AuthProvider>
+    </QueryClientProvider>
     </ThemeProvider>
   )
 }

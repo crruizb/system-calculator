@@ -12,6 +12,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.100.6",
     "axios": "^1.15.2",
     "i18next": "^26.0.8",
     "papaparse": "^5.5.3",

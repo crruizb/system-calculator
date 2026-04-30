@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { apiFetchAuth } from "../api/client";
+import { useTenantMe } from "../api/queries";
 import { useTranslation } from "react-i18next";
 
 interface TenantInfo {
@@ -10,13 +11,9 @@ interface TenantInfo {
 }
 
 export function BillingPage() {
-  const [tenant, setTenant] = useState<TenantInfo | null>(null);
+  const { data: tenant } = useTenantMe() as { data: TenantInfo | undefined };
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
-
-  useEffect(() => {
-    apiFetchAuth<TenantInfo>("/api/tenants/me").then(setTenant);
-  }, []);
 
   async function upgrade(plan: "basic" | "pro") {
     setLoading(true);

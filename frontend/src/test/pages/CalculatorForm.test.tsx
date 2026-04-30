@@ -5,17 +5,21 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../../context/AuthContext";
 import { CalculatorForm } from "../../pages/CalculatorForm";
 import * as client from "../../api/client";
+import { createTestQueryClient, TestProviders } from "../test-utils";
 
 function renderCreate() {
+  const queryClient = createTestQueryClient();
   return render(
-    <AuthProvider>
-      <MemoryRouter initialEntries={["/dashboard/new"]}>
-        <Routes>
-          <Route path="/dashboard/new" element={<CalculatorForm />} />
-          <Route path="/dashboard" element={<div>Dashboard</div>} />
-        </Routes>
-      </MemoryRouter>
-    </AuthProvider>,
+    <TestProviders queryClient={queryClient}>
+      <AuthProvider>
+        <MemoryRouter initialEntries={["/dashboard/new"]}>
+          <Routes>
+            <Route path="/dashboard/new" element={<CalculatorForm />} />
+            <Route path="/dashboard" element={<div>Dashboard</div>} />
+          </Routes>
+        </MemoryRouter>
+      </AuthProvider>
+    </TestProviders>,
   );
 }
 
@@ -41,7 +45,7 @@ describe("CalculatorForm", () => {
     });
     renderCreate();
 
-    await userEvent.type(screen.getByLabelText(/name/i), "My Calc");
+    await userEvent.type(screen.getByLabelText(/^name$/i), "My Calc");
     await userEvent.type(screen.getByLabelText(/slug/i), "my-calc");
     await userEvent.type(
       screen.getByLabelText(/sheet url/i),

@@ -2,17 +2,21 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { PublicCalculator } from "../../pages/PublicCalculator";
-import * as hook from "../../hooks/useTenantCalculator";
+import * as queries from "../../api/queries";
 
 describe("PublicCalculator", () => {
   beforeEach(() => vi.restoreAllMocks());
 
   it("shows loading state initially", () => {
-    vi.spyOn(hook, "useTenantCalculator").mockReturnValue({
-      config: null,
-      loading: true,
+    vi.spyOn(queries, "useTenantCalculator").mockReturnValue({
+      data: undefined,
+      isLoading: true,
       error: null,
-    });
+    } as ReturnType<typeof queries.useTenantCalculator>);
+    vi.spyOn(queries, "useSheetData").mockReturnValue({
+      data: [],
+      isLoading: false,
+    } as ReturnType<typeof queries.useSheetData>);
 
     render(
       <MemoryRouter initialEntries={["/c/acme/diamond-ring"]}>
@@ -25,15 +29,19 @@ describe("PublicCalculator", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole("status")).toBeInTheDocument();
+    expect(screen.getByText(/cargando/i)).toBeInTheDocument();
   });
 
   it("shows error message when config fetch fails", () => {
-    vi.spyOn(hook, "useTenantCalculator").mockReturnValue({
-      config: null,
-      loading: false,
-      error: "404 Not Found",
-    });
+    vi.spyOn(queries, "useTenantCalculator").mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      error: new Error("404 Not Found"),
+    } as ReturnType<typeof queries.useTenantCalculator>);
+    vi.spyOn(queries, "useSheetData").mockReturnValue({
+      data: [],
+      isLoading: false,
+    } as ReturnType<typeof queries.useSheetData>);
 
     render(
       <MemoryRouter initialEntries={["/c/acme/diamond-ring"]}>
@@ -50,8 +58,8 @@ describe("PublicCalculator", () => {
   });
 
   it("applies primaryColor as CSS variable when branding has color", () => {
-    vi.spyOn(hook, "useTenantCalculator").mockReturnValue({
-      config: {
+    vi.spyOn(queries, "useTenantCalculator").mockReturnValue({
+      data: {
         sheetUrl: "https://example.com",
         settings: { currency: "€", locale: "es-ES" },
         branding: {
@@ -60,9 +68,13 @@ describe("PublicCalculator", () => {
           logo: null,
         },
       },
-      loading: false,
+      isLoading: false,
       error: null,
-    });
+    } as ReturnType<typeof queries.useTenantCalculator>);
+    vi.spyOn(queries, "useSheetData").mockReturnValue({
+      data: [],
+      isLoading: false,
+    } as ReturnType<typeof queries.useSheetData>);
 
     const { container } = render(
       <MemoryRouter initialEntries={["/c/acme/diamond-ring"]}>
@@ -80,15 +92,19 @@ describe("PublicCalculator", () => {
   });
 
   it("shows watermark when branding has no companyName", () => {
-    vi.spyOn(hook, "useTenantCalculator").mockReturnValue({
-      config: {
+    vi.spyOn(queries, "useTenantCalculator").mockReturnValue({
+      data: {
         sheetUrl: "https://example.com",
         settings: { currency: "€", locale: "es-ES" },
         branding: {},
       },
-      loading: false,
+      isLoading: false,
       error: null,
-    });
+    } as ReturnType<typeof queries.useTenantCalculator>);
+    vi.spyOn(queries, "useSheetData").mockReturnValue({
+      data: [],
+      isLoading: false,
+    } as ReturnType<typeof queries.useSheetData>);
 
     render(
       <MemoryRouter initialEntries={["/c/acme/diamond-ring"]}>

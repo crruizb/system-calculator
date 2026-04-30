@@ -5,17 +5,21 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../../context/AuthContext";
 import { Login } from "../../pages/Login";
 import * as client from "../../api/client";
+import { createTestQueryClient, TestProviders } from "../test-utils";
 
 function renderLogin(search = "/login") {
+  const queryClient = createTestQueryClient();
   return render(
-    <AuthProvider>
-      <MemoryRouter initialEntries={[search]}>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<div>Dashboard</div>} />
-        </Routes>
-      </MemoryRouter>
-    </AuthProvider>,
+    <TestProviders queryClient={queryClient}>
+      <AuthProvider>
+        <MemoryRouter initialEntries={[search]}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<div>Dashboard</div>} />
+          </Routes>
+        </MemoryRouter>
+      </AuthProvider>
+    </TestProviders>,
   );
 }
 

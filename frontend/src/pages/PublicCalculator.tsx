@@ -2,8 +2,7 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { calcT } from "../utils/calcT";
 import { useTheme } from "../context/ThemeContext";
-import { useTenantCalculator } from "../hooks/useTenantCalculator";
-import { useSheetData } from "../hooks/useSheetData";
+import { useTenantCalculator, useSheetData } from "../api/queries";
 import PriceCalculator from "../components/PriceCalculator";
 import PriceSummary from "../components/PriceSummary";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -25,11 +24,11 @@ export function PublicCalculator() {
   }>();
   const { theme, toggleTheme } = useTheme();
   const {
-    config,
-    loading: configLoading,
+    data: config,
+    isLoading: configLoading,
     error,
   } = useTenantCalculator(tenantSlug, calcSlug);
-  const { data, loading: dataLoading } = useSheetData(config?.sheetUrl ?? null);
+  const { data, isLoading: dataLoading } = useSheetData(config?.sheetUrl ?? null);
   const [instances, setInstances] = useState<CalculatorInstance[]>([
     { id: crypto.randomUUID(), filters: {} },
   ]);
