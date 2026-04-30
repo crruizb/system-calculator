@@ -134,7 +134,10 @@
     "totalCombined": "Combined total",
     "partialPrices": "{{resolved}} of {{total}} calculators with price",
     "select": "— Select —",
-    "selectField": "Select {{field}}"
+    "selectField": "Select {{field}}",
+    "calculatedPrice": "Calculated price",
+    "selectAllOptions": "Select all options",
+    "noMatch": "No match"
   },
   "billing": {
     "title": "Billing",

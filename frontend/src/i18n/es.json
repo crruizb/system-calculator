@@ -134,7 +134,10 @@
     "totalCombined": "Total combinado",
     "partialPrices": "{{resolved}} de {{total}} calculadoras con precio",
     "select": "— Seleccionar —",
-    "selectField": "Seleccionar {{field}}"
+    "selectField": "Seleccionar {{field}}",
+    "calculatedPrice": "Precio calculado",
+    "selectAllOptions": "Selecciona todas las opciones",
+    "noMatch": "Sin coincidencia"
   },
   "billing": {
     "title": "Facturación",

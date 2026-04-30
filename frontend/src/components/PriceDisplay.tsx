@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { calcT } from "../utils/calcT";
 
 interface PriceDisplayProps {
   price: string | null;
@@ -13,6 +14,7 @@ export default function PriceDisplay({
   locale = "es-ES",
   allSelected,
 }: PriceDisplayProps) {
+  const t = calcT(locale);
   const prevRef = useRef<string | null>(null);
   const numRef = useRef<HTMLDivElement>(null);
 
@@ -34,7 +36,7 @@ export default function PriceDisplay({
       }`}
     >
       <p className="font-body text-[0.65rem] tracking-[0.18em] uppercase text-text-muted m-0">
-        Precio calculado
+        {t("public.calculatedPrice")}
       </p>
       <div className="flex items-baseline gap-1" ref={numRef}>
         {price ? (
@@ -51,7 +53,7 @@ export default function PriceDisplay({
           </>
         ) : (
           <span className="font-body text-sm text-text-dim italic">
-            {allSelected ? "Sin coincidencia" : "Selecciona todas las opciones"}
+            {allSelected ? t("public.noMatch") : t("public.selectAllOptions")}
           </span>
         )}
       </div>
