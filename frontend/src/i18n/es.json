@@ -97,7 +97,9 @@
     "view": "Ver ↗",
     "edit": "Editar",
     "delete": "Eliminar",
-    "guide": "Guía"
+    "guide": "Guía",
+    "deactivate": "Desactivar",
+    "activate": "Activar"
   },
   "calcForm": {
     "titleNew": "Nueva calculadora",

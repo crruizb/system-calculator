@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiFetchAuth } from "../api/client";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "../context/AuthContext";
-import { EmbedModal } from "../components/EmbedModal";
 
 interface Calculator {
   id: string;
@@ -19,10 +17,7 @@ interface Calculator {
 export function Dashboard() {
   const [calculators, setCalculators] = useState<Calculator[]>([]);
   const [loading, setLoading] = useState(true);
-  const [embedCalc, setEmbedCalc] = useState<Calculator | null>(null);
   const { t } = useTranslation();
-  const { tenantPlan } = useAuth();
-  const canEmbed = tenantPlan === "basic" || tenantPlan === "pro";
 
   useEffect(() => {
     apiFetchAuth<Calculator[]>("/api/calculators")
@@ -54,10 +49,6 @@ export function Dashboard() {
 
   return (
     <div>
-      {embedCalc && (
-        <EmbedModal calc={embedCalc} onClose={() => setEmbedCalc(null)} />
-      )}
-
       <div className="flex items-center justify-between flex-wrap gap-3 mb-8">
         <h1
           className="font-display text-3xl"
@@ -168,21 +159,6 @@ export function Dashboard() {
               >
                 {t("dashboard.edit")}
               </Link>
-              {canEmbed && (
-                <button
-                  onClick={() => setEmbedCalc(c)}
-                  className="transition-colors"
-                  style={{ color: "var(--color-text-muted)" }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "var(--color-text-primary)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = "var(--color-text-muted)")
-                  }
-                >
-                  Embed
-                </button>
-              )}
               <button
                 onClick={() => handleToggle(c)}
                 className="transition-colors"
@@ -194,7 +170,7 @@ export function Dashboard() {
                   (e.currentTarget.style.color = "var(--color-text-muted)")
                 }
               >
-                {c.isActive ? "Desactivar" : "Activar"}
+                {c.isActive ? t("dashboard.deactivate") : t("dashboard.activate")}
               </button>
               <button
                 onClick={() => handleDelete(c.id)}

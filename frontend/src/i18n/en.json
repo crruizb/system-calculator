@@ -97,7 +97,9 @@
     "view": "View ↗",
     "edit": "Edit",
     "delete": "Delete",
-    "guide": "Guide"
+    "guide": "Guide",
+    "deactivate": "Deactivate",
+    "activate": "Activate"
   },
   "calcForm": {
     "titleNew": "New Calculator",
