@@ -17,6 +17,7 @@
     "heroSubtitle": "Pega la URL de tu hoja de cálculo. Obtén una calculadora compartible al instante. Tus clientes eligen opciones y siempre obtienes el precio correcto.",
     "startFree": "Empezar gratis",
     "signInArrow": "Iniciar sesión →",
+    "googleCta": "Iniciar sesión con Google",
     "goToDashboard": "Ir al panel →",
     "howItWorks": "Cómo funciona",
     "yourSheet": "1 — Tu hoja de Google",
@@ -86,7 +87,9 @@
     "submitting": "Creando cuenta…",
     "submit": "Crear cuenta",
     "hasAccount": "¿Ya tienes cuenta?",
-    "signIn": "Inicia sesión"
+    "signIn": "Inicia sesión",
+    "google": "Registrarse con Google",
+    "or": "o"
   },
   "dashboard": {
     "title": "Mis calculadoras",

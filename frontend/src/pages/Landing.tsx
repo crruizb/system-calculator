@@ -191,16 +191,16 @@ export function Landing() {
               >
                 {t("landing.startFree")}
               </Link>
-              <Link
-                to="/login"
+              <a
+                href={`${import.meta.env.VITE_API_URL ?? ""}/oauth2/authorization/google`}
                 className="px-7 py-3.5 rounded-xl text-base font-semibold transition-colors"
                 style={{
                   color: "var(--color-text-muted)",
                   border: "1px solid var(--color-border-line)",
                 }}
               >
-                {t("landing.signInArrow")}
-              </Link>
+                {t("landing.googleCta")}
+              </a>
             </>
           ) : null}
         </div>
@@ -354,13 +354,25 @@ export function Landing() {
               {t("landing.goToDashboard")}
             </Link>
           ) : (
-            <Link
-              to="/register"
-              className="inline-block px-8 py-4 rounded-xl text-base font-semibold text-white transition-colors"
-              style={{ background: "var(--color-main)" }}
-            >
-              {t("landing.ctaButton")}
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                to="/register"
+                className="px-8 py-4 rounded-xl text-base font-semibold text-white transition-colors"
+                style={{ background: "var(--color-main)" }}
+              >
+                {t("landing.ctaButton")}
+              </Link>
+              <a
+                href={`${import.meta.env.VITE_API_URL ?? ""}/oauth2/authorization/google`}
+                className="px-8 py-4 rounded-xl text-base font-semibold transition-colors"
+                style={{
+                  color: "var(--color-text-muted)",
+                  border: "1px solid var(--color-border-line)",
+                }}
+              >
+                {t("landing.googleCta")}
+              </a>
+            </div>
           )}
         </div>
       </section>

@@ -98,6 +98,19 @@ export function Register() {
           {t("register.title")}
         </h1>
 
+        <a
+          href={`${import.meta.env.VITE_API_URL ?? ""}/oauth2/authorization/google`}
+          className="flex items-center justify-center w-full py-3 rounded-lg border border-[var(--color-main)]/30 text-sm hover:bg-[var(--color-main)]/10 transition-colors mb-6"
+        >
+          {t("register.google")}
+        </a>
+
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex-1 h-px" style={{ background: "var(--color-border-line)" }} />
+          <span className="text-xs" style={{ color: "var(--color-text-muted)" }}>{t("register.or")}</span>
+          <div className="flex-1 h-px" style={{ background: "var(--color-border-line)" }} />
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm mb-1">

@@ -17,6 +17,7 @@
     "heroSubtitle": "Paste a spreadsheet URL. Get a shareable, embeddable calculator — instantly. Your customers select options, you get the right price every time.",
     "startFree": "Start for free",
     "signInArrow": "Sign in →",
+    "googleCta": "Sign in with Google",
     "goToDashboard": "Go to dashboard →",
     "howItWorks": "How it works",
     "yourSheet": "1 — Your Google Sheet",
@@ -86,7 +87,9 @@
     "submitting": "Creating account…",
     "submit": "Create Account",
     "hasAccount": "Already have an account?",
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "google": "Sign up with Google",
+    "or": "or"
   },
   "dashboard": {
     "title": "My Calculators",
