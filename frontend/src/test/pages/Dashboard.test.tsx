@@ -343,6 +343,22 @@ describe("Dashboard", () => {
     );
   });
 
+  it("generates unique slug when -copy already exists", async () => {
+    vi.spyOn(client, "apiFetch").mockResolvedValue({
+      slug: "my-tenant",
+      plan: "basic",
+    });
+    vi.spyOn(client, "apiFetchAuth").mockResolvedValue([
+      makeCalc({ slug: "diamond-ring" }),
+      makeCalc({ id: "2", slug: "diamond-ring-copy", name: "Diamond Ring (copy)" }),
+    ]);
+    renderDashboard();
+    const buttons = await screen.findAllByRole("button", { name: /duplicate/i });
+    await userEvent.click(buttons[0]);
+    expect(screen.getByDisplayValue("diamond-ring-copy-2")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Diamond Ring (copy 2)")).toBeInTheDocument();
+  });
+
   it("shows error in dialog when duplicate API fails", async () => {
     vi.spyOn(client, "apiFetchAuth")
       .mockResolvedValueOnce([makeCalc()])

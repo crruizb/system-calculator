@@ -63,9 +63,7 @@ export function useTenantCalculator(tenantSlug: string, calcSlug: string) {
   return useQuery({
     queryKey: publicKeys.calculator(tenantSlug, calcSlug),
     queryFn: () =>
-      apiFetch<TenantCalculatorConfig>(
-        `/api/public/${tenantSlug}/${calcSlug}`,
-      ),
+      apiFetch<TenantCalculatorConfig>(`/api/public/${tenantSlug}/${calcSlug}`),
     enabled: !!tenantSlug && !!calcSlug,
   });
 }

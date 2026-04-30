@@ -50,8 +50,22 @@ export function Dashboard() {
   }
 
   function openDuplicateDialog(calc: Calculator) {
-    setDuplicateCalc(calc);
     setDuplicateError(null);
+    const slugs = new Set(calculators.map((c) => c.slug));
+    const names = new Set(calculators.map((c) => c.name));
+    let slug = `${calc.slug}-copy`;
+    let i = 2;
+    while (slugs.has(slug)) {
+      slug = `${calc.slug}-copy-${i}`;
+      i++;
+    }
+    let name = `${calc.name} (copy)`;
+    let j = 2;
+    while (names.has(name)) {
+      name = `${calc.name} (copy ${j})`;
+      j++;
+    }
+    setDuplicateCalc({ ...calc, slug, name });
   }
 
   async function handleDuplicate(name: string, slug: string) {
@@ -269,8 +283,8 @@ export function Dashboard() {
       />
       <DuplicateDialog
         open={duplicateCalc !== null}
-        initialName={duplicateCalc ? `${duplicateCalc.name} (copy)` : ""}
-        initialSlug={duplicateCalc ? `${duplicateCalc.slug}-copy` : ""}
+        initialName={duplicateCalc?.name ?? ""}
+        initialSlug={duplicateCalc?.slug ?? ""}
         onConfirm={handleDuplicate}
         onCancel={() => setDuplicateCalc(null)}
         error={duplicateError}
