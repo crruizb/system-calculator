@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "../../context/AuthContext";
@@ -92,5 +92,88 @@ describe("Dashboard", () => {
       await screen.findByRole("link", { name: /new calculator/i }),
     );
     expect(screen.getByText("New Calculator")).toBeInTheDocument();
+  });
+
+  it("shows confirmation dialog when delete button clicked", async () => {
+    vi.spyOn(client, "apiFetch").mockResolvedValue({
+      slug: "my-tenant",
+      plan: "free",
+    });
+    vi.spyOn(client, "apiFetchAuth").mockResolvedValue([
+      {
+        id: "1",
+        name: "Diamond Ring",
+        slug: "diamond-ring",
+        tenantSlug: "my-tenant",
+        sheetUrl: "https://example.com",
+        settings: {},
+        branding: {},
+        isActive: true,
+      },
+    ]);
+    renderDashboard();
+    await userEvent.click(await screen.findByRole("button", { name: /delete/i }));
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByText(/cannot be undone/i)).toBeInTheDocument();
+  });
+
+  it("does NOT call delete API when cancel clicked in confirmation", async () => {
+    const apiFetchAuthMock = vi.spyOn(client, "apiFetchAuth").mockResolvedValue([
+      {
+        id: "1",
+        name: "Diamond Ring",
+        slug: "diamond-ring",
+        tenantSlug: "my-tenant",
+        sheetUrl: "https://example.com",
+        settings: {},
+        branding: {},
+        isActive: true,
+      },
+    ]);
+    vi.spyOn(client, "apiFetch").mockResolvedValue({
+      slug: "my-tenant",
+      plan: "free",
+    });
+    renderDashboard();
+    await userEvent.click(await screen.findByRole("button", { name: /delete/i }));
+    await userEvent.click(screen.getByRole("button", { name: /cancel/i }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    // apiFetchAuth called once (initial load), never with DELETE
+    expect(apiFetchAuthMock).not.toHaveBeenCalledWith(
+      expect.stringContaining("/api/calculators/"),
+      expect.objectContaining({ method: "DELETE" }),
+    );
+  });
+
+  it("calls delete API and removes item when confirm clicked", async () => {
+    const apiFetchAuthMock = vi.spyOn(client, "apiFetchAuth")
+      .mockResolvedValueOnce([
+        {
+          id: "1",
+          name: "Diamond Ring",
+          slug: "diamond-ring",
+          tenantSlug: "my-tenant",
+          sheetUrl: "https://example.com",
+          settings: {},
+          branding: {},
+          isActive: true,
+        },
+      ])
+      .mockResolvedValueOnce(undefined); // DELETE response (204 No Content)
+    vi.spyOn(client, "apiFetch").mockResolvedValue({
+      slug: "my-tenant",
+      plan: "free",
+    });
+    renderDashboard();
+    await userEvent.click(await screen.findByRole("button", { name: /delete/i }));
+    const dialog = screen.getByRole("dialog");
+    await userEvent.click(within(dialog).getByRole("button", { name: /^delete$/i }));
+    expect(apiFetchAuthMock).toHaveBeenCalledWith(
+      "/api/calculators/1",
+      expect.objectContaining({ method: "DELETE" }),
+    );
+    await waitFor(() =>
+      expect(screen.queryByText("Diamond Ring")).not.toBeInTheDocument(),
+    );
   });
 });

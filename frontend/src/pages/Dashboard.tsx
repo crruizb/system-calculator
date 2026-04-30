@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiFetchAuth } from "../api/client";
 import { useTranslation } from "react-i18next";
+import { ConfirmDialog } from "../components/ConfirmDialog";
 
 interface Calculator {
   id: string;
@@ -17,6 +18,7 @@ interface Calculator {
 export function Dashboard() {
   const [calculators, setCalculators] = useState<Calculator[]>([]);
   const [loading, setLoading] = useState(true);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -173,8 +175,9 @@ export function Dashboard() {
                 {c.isActive ? t("dashboard.deactivate") : t("dashboard.activate")}
               </button>
               <button
-                onClick={() => handleDelete(c.id)}
-                className="ml-auto text-red-400 hover:text-red-300 transition-colors"
+                onClick={() => setConfirmDeleteId(c.id)}
+                className="ml-auto transition-colors"
+                style={{ color: "var(--color-error)" }}
               >
                 {t("dashboard.delete")}
               </button>
@@ -182,6 +185,19 @@ export function Dashboard() {
           </li>
         ))}
       </ul>
+
+      <ConfirmDialog
+        open={confirmDeleteId !== null}
+        title={t("confirmDialog.deleteCalculatorTitle")}
+        message={t("confirmDialog.deleteCalculatorMessage")}
+        confirmLabel={t("confirmDialog.confirm")}
+        cancelLabel={t("confirmDialog.cancel")}
+        onConfirm={async () => {
+          if (confirmDeleteId) await handleDelete(confirmDeleteId);
+          setConfirmDeleteId(null);
+        }}
+        onCancel={() => setConfirmDeleteId(null)}
+      />
     </div>
   );
 }

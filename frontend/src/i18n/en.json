@@ -104,6 +104,12 @@
     "deactivate": "Deactivate",
     "activate": "Activate"
   },
+  "confirmDialog": {
+    "deleteCalculatorTitle": "Delete calculator",
+    "deleteCalculatorMessage": "This action cannot be undone.",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
   "calcForm": {
     "titleNew": "New Calculator",
     "titleEdit": "Edit Calculator",

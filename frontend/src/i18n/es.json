@@ -104,6 +104,12 @@
     "deactivate": "Desactivar",
     "activate": "Activar"
   },
+  "confirmDialog": {
+    "deleteCalculatorTitle": "Eliminar calculadora",
+    "deleteCalculatorMessage": "Esta acción no se puede deshacer.",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar"
+  },
   "calcForm": {
     "titleNew": "Nueva calculadora",
     "titleEdit": "Editar calculadora",
