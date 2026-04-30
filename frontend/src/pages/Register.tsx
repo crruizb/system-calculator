@@ -26,7 +26,7 @@ export function Register() {
         method: "POST",
         body: JSON.stringify({ email, password, tenantName, tenantSlug }),
       });
-      markLoggedIn();
+      await markLoggedIn();
       navigate("/dashboard");
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : t("register.submit");

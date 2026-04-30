@@ -11,7 +11,7 @@ interface AuthContextValue {
   isLoggedIn: boolean | null;
   tenantName: string | null;
   tenantPlan: string | null;
-  markLoggedIn: () => void;
+  markLoggedIn: () => Promise<void>;
   logout: () => void;
 }
 
@@ -37,17 +37,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   function markLoggedIn() {
-    fetchTenant();
+    return fetchTenant();
   }
 
-  async function logout() {
-    try {
-      await apiFetch("/api/auth/logout", { method: "POST" });
-    } finally {
-      setIsLoggedIn(false);
-      setTenantName(null);
-      setTenantPlan(null);
-    }
+  function logout() {
+    setIsLoggedIn(false);
+    setTenantName(null);
+    setTenantPlan(null);
+    apiFetch("/api/auth/logout", { method: "POST" }).catch(() => {});
   }
 
   return (
