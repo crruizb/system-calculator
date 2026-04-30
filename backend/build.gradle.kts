@@ -35,6 +35,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("com.stripe:stripe-java:32.1.0")
     implementation("com.github.librepdf:openpdf:1.3.43")
+    implementation("org.xhtmlrenderer:flying-saucer-pdf-openpdf:9.4.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
