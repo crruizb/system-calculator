@@ -102,7 +102,10 @@
     "delete": "Delete",
     "guide": "Guide",
     "deactivate": "Deactivate",
-    "activate": "Activate"
+    "activate": "Activate",
+    "usage": "{{count}} of {{max}} calculators",
+    "limitReached": "Plan limit reached.",
+    "upgrade": "Upgrade →"
   },
   "confirmDialog": {
     "deleteCalculatorTitle": "Delete calculator",

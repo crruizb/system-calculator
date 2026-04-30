@@ -2,7 +2,14 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiFetchAuth } from "../api/client";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../context/AuthContext";
 import { ConfirmDialog } from "../components/ConfirmDialog";
+
+function planLimit(plan: string | null): number {
+  if (plan === "pro") return 10;
+  if (plan === "basic") return 3;
+  return 1;
+}
 
 interface Calculator {
   id: string;
@@ -20,6 +27,9 @@ export function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const { t } = useTranslation();
+  const { tenantPlan } = useAuth();
+  const max = planLimit(tenantPlan);
+  const atLimit = calculators.length >= max;
 
   useEffect(() => {
     apiFetchAuth<Calculator[]>("/api/calculators")
@@ -33,10 +43,13 @@ export function Dashboard() {
   }
 
   async function handleToggle(calc: Calculator) {
-    const updated = await apiFetchAuth<Calculator>(`/api/calculators/${calc.id}`, {
-      method: "PUT",
-      body: JSON.stringify({ isActive: !calc.isActive }),
-    });
+    const updated = await apiFetchAuth<Calculator>(
+      `/api/calculators/${calc.id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({ isActive: !calc.isActive }),
+      },
+    );
     setCalculators((prev) => prev.map((c) => (c.id === calc.id ? updated : c)));
   }
 
@@ -59,26 +72,40 @@ export function Dashboard() {
           {t("dashboard.title")}
         </h1>
         <div className="flex items-center gap-3">
-          <Link
-            to="/guide"
-            className="text-sm transition-colors"
+          <span
+            className="text-sm"
             style={{ color: "var(--color-text-muted)" }}
           >
-            {t("dashboard.guide")}
-          </Link>
-          <Link
-            to="/dashboard/new"
-            className="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors"
-            style={{ background: "var(--color-main)" }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.background = "var(--color-main-muted)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.background = "var(--color-main)")
-            }
-          >
-            {t("dashboard.newCalc")}
-          </Link>
+            {t("dashboard.usage", { count: calculators.length, max })}
+          </span>
+          {atLimit ? (
+            <span className="flex items-center gap-2 text-sm">
+              <span style={{ color: "var(--color-text-muted)" }}>
+                {t("dashboard.limitReached")}
+              </span>
+              <Link
+                to="/dashboard/billing"
+                className="font-semibold transition-colors"
+                style={{ color: "var(--color-main)" }}
+              >
+                {t("dashboard.upgrade")}
+              </Link>
+            </span>
+          ) : (
+            <Link
+              to="/dashboard/new"
+              className="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors"
+              style={{ background: "var(--color-main)" }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.background = "var(--color-main-muted)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.background = "var(--color-main)")
+              }
+            >
+              {t("dashboard.newCalc")}
+            </Link>
+          )}
         </div>
       </div>
 
@@ -172,7 +199,9 @@ export function Dashboard() {
                   (e.currentTarget.style.color = "var(--color-text-muted)")
                 }
               >
-                {c.isActive ? t("dashboard.deactivate") : t("dashboard.activate")}
+                {c.isActive
+                  ? t("dashboard.deactivate")
+                  : t("dashboard.activate")}
               </button>
               <button
                 onClick={() => setConfirmDeleteId(c.id)}
