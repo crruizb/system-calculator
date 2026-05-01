@@ -131,7 +131,8 @@ describe("Dashboard", () => {
       },
     ]);
     renderDashboard();
-    await userEvent.click(await screen.findByRole("button", { name: /delete/i }));
+    await userEvent.click(await screen.findByRole("button", { name: /more actions/i }));
+    await userEvent.click(screen.getByRole("button", { name: /^delete$/i }));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.getByText(/cannot be undone/i)).toBeInTheDocument();
   });
@@ -154,7 +155,8 @@ describe("Dashboard", () => {
       plan: "free",
     });
     renderDashboard();
-    await userEvent.click(await screen.findByRole("button", { name: /delete/i }));
+    await userEvent.click(await screen.findByRole("button", { name: /more actions/i }));
+    await userEvent.click(screen.getByRole("button", { name: /^delete$/i }));
     await userEvent.click(screen.getByRole("button", { name: /cancel/i }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     // apiFetchAuth called once (initial load), never with DELETE
@@ -185,7 +187,8 @@ describe("Dashboard", () => {
       plan: "free",
     });
     renderDashboard();
-    await userEvent.click(await screen.findByRole("button", { name: /delete/i }));
+    await userEvent.click(await screen.findByRole("button", { name: /more actions/i }));
+    await userEvent.click(screen.getByRole("button", { name: /^delete$/i }));
     const dialog = screen.getByRole("dialog");
     await userEvent.click(within(dialog).getByRole("button", { name: /^delete$/i }));
     expect(apiFetchAuthMock).toHaveBeenCalledWith(
@@ -204,9 +207,8 @@ describe("Dashboard", () => {
     });
     vi.spyOn(client, "apiFetchAuth").mockResolvedValue([makeCalc()]);
     renderDashboard();
-    await waitFor(() =>
-      expect(screen.getByRole("button", { name: /duplicate/i })).toBeInTheDocument(),
-    );
+    await userEvent.click(await screen.findByRole("button", { name: /more actions/i }));
+    expect(screen.getByRole("button", { name: /^duplicate$/i })).toBeInTheDocument();
   });
 
   it("does NOT show duplicate button when at limit", async () => {
@@ -233,9 +235,8 @@ describe("Dashboard", () => {
     });
     vi.spyOn(client, "apiFetchAuth").mockResolvedValue([makeCalc()]);
     renderDashboard();
-    await userEvent.click(
-      await screen.findByRole("button", { name: /duplicate/i }),
-    );
+    await userEvent.click(await screen.findByRole("button", { name: /more actions/i }));
+    await userEvent.click(screen.getByRole("button", { name: /^duplicate$/i }));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(
       screen.getByDisplayValue("Diamond Ring (copy)"),
@@ -255,9 +256,8 @@ describe("Dashboard", () => {
       plan: "basic",
     });
     renderDashboard();
-    await userEvent.click(
-      await screen.findByRole("button", { name: /duplicate/i }),
-    );
+    await userEvent.click(await screen.findByRole("button", { name: /more actions/i }));
+    await userEvent.click(screen.getByRole("button", { name: /^duplicate$/i }));
 
     const nameInput = screen.getByDisplayValue("Diamond Ring (copy)");
     await userEvent.clear(nameInput);
@@ -298,9 +298,8 @@ describe("Dashboard", () => {
       plan: "pro",
     });
     renderDashboard();
-    await userEvent.click(
-      await screen.findByRole("button", { name: /duplicate/i }),
-    );
+    await userEvent.click(await screen.findByRole("button", { name: /more actions/i }));
+    await userEvent.click(screen.getByRole("button", { name: /^duplicate$/i }));
     const dialog = screen.getByRole("dialog");
     await userEvent.click(within(dialog).getByRole("button", { name: /^duplicate$/i }));
 
@@ -327,9 +326,8 @@ describe("Dashboard", () => {
       plan: "basic",
     });
     renderDashboard();
-    await userEvent.click(
-      await screen.findByRole("button", { name: /duplicate/i }),
-    );
+    await userEvent.click(await screen.findByRole("button", { name: /more actions/i }));
+    await userEvent.click(screen.getByRole("button", { name: /^duplicate$/i }));
     const dialog = screen.getByRole("dialog");
     await userEvent.click(within(dialog).getByRole("button", { name: /^duplicate$/i }));
 
@@ -354,8 +352,9 @@ describe("Dashboard", () => {
       makeCalc({ id: "2", slug: "diamond-ring-copy", name: "Diamond Ring (copy)" }),
     ]);
     renderDashboard();
-    const buttons = await screen.findAllByRole("button", { name: /duplicate/i });
-    await userEvent.click(buttons[0]);
+    const moreActionsButtons = await screen.findAllByRole("button", { name: /more actions/i });
+    await userEvent.click(moreActionsButtons[0]);
+    await userEvent.click(screen.getByRole("button", { name: /^duplicate$/i }));
     expect(screen.getByDisplayValue("diamond-ring-copy-2")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Diamond Ring (copy 2)")).toBeInTheDocument();
   });
@@ -369,14 +368,44 @@ describe("Dashboard", () => {
       plan: "basic",
     });
     renderDashboard();
-    await userEvent.click(
-      await screen.findByRole("button", { name: /duplicate/i }),
-    );
+    await userEvent.click(await screen.findByRole("button", { name: /more actions/i }));
+    await userEvent.click(screen.getByRole("button", { name: /^duplicate$/i }));
     const dialog = screen.getByRole("dialog");
     await userEvent.click(within(dialog).getByRole("button", { name: /^duplicate$/i }));
 
     await waitFor(() =>
       expect(screen.getByText("Slug already taken")).toBeInTheDocument(),
+    );
+  });
+
+  it("shows verification message instead of new calculator link when email not verified", async () => {
+    vi.spyOn(client, "apiFetch").mockResolvedValue({
+      slug: "my-tenant",
+      plan: "free",
+      emailVerified: false,
+    });
+    vi.spyOn(client, "apiFetchAuth").mockResolvedValue([]);
+    renderDashboard();
+    await waitFor(() =>
+      expect(screen.getByText(/verify your email/i)).toBeInTheDocument(),
+    );
+    expect(
+      screen.queryByRole("link", { name: /new calculator/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows new calculator link when email is verified", async () => {
+    vi.spyOn(client, "apiFetch").mockResolvedValue({
+      slug: "my-tenant",
+      plan: "free",
+      emailVerified: true,
+    });
+    vi.spyOn(client, "apiFetchAuth").mockResolvedValue([]);
+    renderDashboard();
+    await waitFor(() =>
+      expect(
+        screen.getByRole("link", { name: /new calculator/i }),
+      ).toBeInTheDocument(),
     );
   });
 });

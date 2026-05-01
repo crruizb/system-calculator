@@ -1,7 +1,9 @@
 package com.systemcalculator
 
+import com.systemcalculator.config.TestEmailSenderConfig
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
@@ -12,6 +14,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Testcontainers
+@Import(TestEmailSenderConfig::class)
 abstract class BaseIntegrationTest {
     companion object {
         // No @Container — we manage lifecycle manually so the container is not stopped

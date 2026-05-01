@@ -92,9 +92,16 @@
     "google": "Registrarse con Google",
     "or": "o"
   },
+  "emailBanner": {
+    "message": "Revisa tu bandeja de entrada y haz clic en el enlace de verificación para activar tu cuenta.",
+    "resend": "Reenviar correo",
+    "sending": "Enviando…",
+    "sent": "¡Correo enviado!"
+  },
   "dashboard": {
     "title": "Mis calculadoras",
     "newCalc": "+ Nueva calculadora",
+    "emailNotVerified": "Verifica tu correo para crear calculadoras.",
     "loading": "Cargando…",
     "empty": "Aún no hay calculadoras.",
     "emptyGuide": "Mira cómo configurar tu hoja de Google →",
@@ -145,7 +152,8 @@
     "brandingLogoHint": "URL directa a un SVG, PNG o JPG",
     "brandingColorLight": "Acento modo claro",
     "brandingColorDark": "Acento modo oscuro",
-    "brandingProLock": "Mejora a Pro para desbloquear →"
+    "brandingProLock": "Mejora a Pro para desbloquear →",
+    "emailNotVerified": "Por favor, verifica tu correo antes de crear una calculadora."
   },
   "public": {
     "downloadPdf": "Descargar PDF",

@@ -6,6 +6,7 @@ import jakarta.servlet.http.Cookie
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
 
@@ -13,12 +14,15 @@ class PdfControllerTest : BaseIntegrationTest() {
 
     @Autowired lateinit var mockMvc: MockMvc
     @Autowired lateinit var objectMapper: ObjectMapper
+    @Autowired lateinit var jdbcTemplate: JdbcTemplate
 
     private fun registerAndGetCookie(email: String, slug: String): String {
         val result = mockMvc.post("/api/auth/register") {
             contentType = MediaType.APPLICATION_JSON
             content = """{"email":"$email","password":"pass1234","tenantName":"Test","tenantSlug":"$slug"}"""
         }.andReturn()
+        // bypass email verification
+        jdbcTemplate.update("UPDATE users SET email_verified = true WHERE email = ?", email)
         return result.response.getCookie("token")?.value
             ?: error("token cookie not set after register")
     }

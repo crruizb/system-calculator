@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../hooks/useAuth";
 import { useTheme } from "../hooks/useTheme";
@@ -34,10 +34,17 @@ interface Calculator {
 export function Dashboard() {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const { t } = useTranslation();
-  const { tenantPlan } = useAuth();
+  const { tenantPlan, emailVerified, markLoggedIn } = useAuth();
   const { theme } = useTheme();
   const max = planLimit(tenantPlan);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("verified") === "true") {
+      markLoggedIn().then(() => setSearchParams({}, { replace: true }));
+    }
+  }, []);
   const [duplicateCalc, setDuplicateCalc] = useState<Calculator | null>(null);
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
   const [embedCalc, setEmbedCalc] = useState<Calculator | null>(null);
@@ -50,6 +57,7 @@ export function Dashboard() {
   const duplicateMutation = useDuplicateCalculator();
 
   const atLimit = calculators.length >= max;
+  const emailBlocked = emailVerified === false;
 
   async function handleDelete(id: string) {
     await deleteMutation.mutateAsync(id);
@@ -128,7 +136,11 @@ export function Dashboard() {
           >
             {t("dashboard.usage", { count: calculators.length, max })}
           </span>
-          {atLimit ? (
+          {emailBlocked ? (
+            <span className="text-sm" style={{ color: "var(--color-text-muted)" }}>
+              {t("dashboard.emailNotVerified")}
+            </span>
+          ) : atLimit ? (
             <span className="flex items-center gap-2 text-sm">
               <span style={{ color: "var(--color-text-muted)" }}>
                 {t("dashboard.limitReached")}

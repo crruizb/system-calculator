@@ -34,6 +34,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("com.stripe:stripe-java:32.1.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
     implementation("com.github.librepdf:openpdf:1.3.43")
     implementation("org.xhtmlrenderer:flying-saucer-pdf-openpdf:9.4.0")
 

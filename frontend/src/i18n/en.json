@@ -92,9 +92,16 @@
     "google": "Sign up with Google",
     "or": "or"
   },
+  "emailBanner": {
+    "message": "Please check your inbox and click the verification link to activate your account.",
+    "resend": "Resend email",
+    "sending": "Sending…",
+    "sent": "Email sent!"
+  },
   "dashboard": {
     "title": "My Calculators",
     "newCalc": "+ New Calculator",
+    "emailNotVerified": "Verify your email to create calculators.",
     "loading": "Loading…",
     "empty": "No calculators yet.",
     "emptyGuide": "See how to set up your Google Sheet →",
@@ -145,7 +152,8 @@
     "brandingLogoHint": "Direct URL to an SVG, PNG, or JPG",
     "brandingColorLight": "Light mode accent",
     "brandingColorDark": "Dark mode accent",
-    "brandingProLock": "Upgrade to Pro to unlock →"
+    "brandingProLock": "Upgrade to Pro to unlock →",
+    "emailNotVerified": "Please verify your email before creating a calculator."
   },
   "public": {
     "downloadPdf": "Download PDF",

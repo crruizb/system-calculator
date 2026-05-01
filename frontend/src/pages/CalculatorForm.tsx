@@ -75,11 +75,12 @@ export function CalculatorForm() {
       }
       navigate("/dashboard");
     } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message.replace(/^\d+\s/, "")
-          : t("calcForm.save"),
-      );
+      const msg = err instanceof Error ? err.message : t("calcForm.save");
+      if (msg.includes("EMAIL_NOT_VERIFIED")) {
+        setError(t("calcForm.emailNotVerified"));
+      } else {
+        setError(msg.replace(/^\d+\s/, ""));
+      }
     }
   }
 

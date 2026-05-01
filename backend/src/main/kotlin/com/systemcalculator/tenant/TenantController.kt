@@ -18,6 +18,7 @@ data class TenantResponse(
     val name: String,
     val plan: String,
     val hasPassword: Boolean,
+    val emailVerified: Boolean,
 )
 
 data class UpdateTenantRequest(
@@ -40,6 +41,7 @@ class TenantController(
             t.id.toString(), t.slug, t.name,
             subscriptionService.getEffectivePlan(t),
             user.passwordHash != null,
+            user.emailVerified,
         )
     }
 
@@ -59,6 +61,7 @@ class TenantController(
             saved.id.toString(), saved.slug, saved.name,
             subscriptionService.getEffectivePlan(saved),
             user.passwordHash != null,
+            user.emailVerified,
         )
     }
 }

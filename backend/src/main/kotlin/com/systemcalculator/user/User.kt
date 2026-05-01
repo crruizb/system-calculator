@@ -16,5 +16,6 @@ class User(
     @Column var passwordHash: String? = null,
     @Column(unique = true) var googleSub: String? = null,
     @Column(nullable = false) val role: String = "owner",
-    @Column(nullable = false) val createdAt: Instant = Instant.now()
+    @Column(nullable = false) val createdAt: Instant = Instant.now(),
+    @Column(nullable = false) var emailVerified: Boolean = false
 )

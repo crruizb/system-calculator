@@ -59,6 +59,24 @@ class AuthController(
         return ResponseEntity.ok().build()
     }
 
+    @GetMapping("/verify-email")
+    fun verifyEmail(@RequestParam token: String): ResponseEntity<Void> {
+        return try {
+            authService.verifyEmail(token)
+            ResponseEntity.status(HttpStatus.FOUND)
+                .header(HttpHeaders.LOCATION, "$frontendUrl/dashboard?verified=true").build()
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.FOUND)
+                .header(HttpHeaders.LOCATION, "$frontendUrl/login?error=invalid-token").build()
+        }
+    }
+
+    @PostMapping("/resend-verification")
+    fun resendVerification(@AuthenticationPrincipal user: User): ResponseEntity<Void> {
+        authService.resendVerificationEmail(user)
+        return ResponseEntity.ok().build()
+    }
+
     @PostMapping("/logout")
     fun logout(request: HttpServletRequest): ResponseEntity<Void> {
         request.cookies?.find { it.name == "refresh_token" }?.value?.let { authService.revoke(it) }

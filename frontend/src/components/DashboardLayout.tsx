@@ -1,5 +1,6 @@
 import { useTheme } from '../hooks/useTheme'
 import { TopNavbar } from './TopNavbar'
+import { EmailVerificationBanner } from './EmailVerificationBanner'
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme()
@@ -15,6 +16,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       }}
     >
       <TopNavbar />
+      <EmailVerificationBanner />
       <main className="max-w-6xl mx-auto px-4 sm:px-8 py-8">
         {children}
       </main>
