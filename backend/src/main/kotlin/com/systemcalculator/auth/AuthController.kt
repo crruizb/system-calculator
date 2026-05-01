@@ -1,6 +1,7 @@
 package com.systemcalculator.auth
 
 import com.systemcalculator.auth.dto.*
+import com.systemcalculator.user.User
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Value
@@ -8,6 +9,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -46,6 +48,15 @@ class AuthController(
             .header(HttpHeaders.SET_COOKIE, accessCookie(pair.accessToken).toString())
             .header(HttpHeaders.SET_COOKIE, refreshCookie(pair.refreshToken).toString())
             .build()
+    }
+
+    @PutMapping("/change-password")
+    fun changePassword(
+        @AuthenticationPrincipal user: User,
+        @Valid @RequestBody req: ChangePasswordRequest,
+    ): ResponseEntity<Void> {
+        authService.changePassword(user, req.currentPassword, req.newPassword)
+        return ResponseEntity.ok().build()
     }
 
     @PostMapping("/logout")

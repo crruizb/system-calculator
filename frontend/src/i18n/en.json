@@ -9,6 +9,7 @@
     "register": "Register",
     "calculators": "Calculators",
     "billing": "Billing",
+    "settings": "Settings",
     "signOut": "Sign out"
   },
   "landing": {
@@ -161,6 +162,26 @@
     "selectAllOptions": "Select all options",
     "noMatch": "No match",
     "shareWhatsApp": "Share via WhatsApp"
+  },
+  "settings": {
+    "title": "Account Settings",
+    "companySection": "Company",
+    "companyName": "Company name",
+    "slug": "URL slug",
+    "slugHint": "Used in public URLs: /c/{slug}/...",
+    "slugWarning": "Changing your slug will break all existing calculator share links.",
+    "passwordSection": "Password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "passwordMismatch": "Passwords do not match",
+    "passwordWrong": "Current password is incorrect",
+    "passwordNoAuth": "Your account uses Google sign-in — password change unavailable.",
+    "saveChanges": "Save",
+    "saving": "Saving…",
+    "saved": "Saved!",
+    "saveError": "Something went wrong. Please try again.",
+    "errorConflict": "Slug already taken"
   },
   "billing": {
     "title": "Billing",

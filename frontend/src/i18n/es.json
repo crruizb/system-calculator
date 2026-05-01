@@ -9,6 +9,7 @@
     "register": "Registrarse",
     "calculators": "Calculadoras",
     "billing": "Facturación",
+    "settings": "Ajustes",
     "signOut": "Cerrar sesión"
   },
   "landing": {
@@ -161,6 +162,26 @@
     "selectAllOptions": "Selecciona todas las opciones",
     "noMatch": "Sin coincidencia",
     "shareWhatsApp": "Compartir por WhatsApp"
+  },
+  "settings": {
+    "title": "Ajustes de cuenta",
+    "companySection": "Empresa",
+    "companyName": "Nombre de empresa",
+    "slug": "Slug de URL",
+    "slugHint": "Usado en URLs públicas: /c/{slug}/...",
+    "slugWarning": "Cambiar el slug romperá todos los enlaces existentes de tus calculadoras.",
+    "passwordSection": "Contraseña",
+    "currentPassword": "Contraseña actual",
+    "newPassword": "Nueva contraseña",
+    "confirmPassword": "Confirmar nueva contraseña",
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "passwordWrong": "La contraseña actual es incorrecta",
+    "passwordNoAuth": "Tu cuenta usa Google — el cambio de contraseña no está disponible.",
+    "saveChanges": "Guardar",
+    "saving": "Guardando…",
+    "saved": "¡Guardado!",
+    "saveError": "Algo salió mal. Inténtalo de nuevo.",
+    "errorConflict": "El slug ya está en uso"
   },
   "billing": {
     "title": "Facturación",

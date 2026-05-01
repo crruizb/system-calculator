@@ -35,6 +35,14 @@ export interface Calculator {
   isActive: boolean;
 }
 
+export interface TenantMe {
+  id: string;
+  slug: string;
+  name: string;
+  plan: string;
+  hasPassword: boolean;
+}
+
 // ── Query Hooks ───────────────────────────────────────────────────
 
 export function useCalculators() {
@@ -55,7 +63,7 @@ export function useCalculator(id: string | undefined) {
 export function useTenantMe() {
   return useQuery({
     queryKey: tenantKeys.me,
-    queryFn: () => apiFetch<{ name: string; plan: string }>("/api/tenants/me"),
+    queryFn: () => apiFetchAuth<TenantMe>("/api/tenants/me"),
   });
 }
 

@@ -42,8 +42,15 @@ export async function apiFetch<T>(
   }
 
   if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`${res.status} ${body}`);
+    const text = await res.text();
+    let message = text;
+    try {
+      const json = JSON.parse(text);
+      if (json.message) message = json.message;
+    } catch {
+      // not JSON, keep raw text as message
+    }
+    throw new Error(`${res.status} ${message}`);
   }
   if (res.status === 204 || res.headers.get("content-length") === "0") {
     return undefined as T;

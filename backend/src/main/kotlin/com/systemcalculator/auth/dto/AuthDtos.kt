@@ -15,3 +15,8 @@ data class LoginRequest(
     @field:NotBlank @field:Email val email: String,
     @field:NotBlank val password: String
 )
+
+data class ChangePasswordRequest(
+    @field:NotBlank val currentPassword: String,
+    @field:NotBlank @field:Size(min = 8) val newPassword: String,
+)

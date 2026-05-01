@@ -105,6 +105,19 @@ export function TopNavbar() {
         >
           {t("nav.billing")}
         </Link>
+        <Link
+          to="/dashboard/settings"
+          className="px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm transition-colors cursor-pointer"
+          style={{ color: "var(--color-text-muted)" }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.color = "var(--color-text-primary)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.color = "var(--color-text-muted)")
+          }
+        >
+          {t("nav.settings")}
+        </Link>
       </div>
 
       <div className="flex items-center gap-1 sm:gap-2 shrink-0">

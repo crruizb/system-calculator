@@ -101,6 +101,16 @@ class AuthService(
         return TokenPair(accessToken, rawRefresh)
     }
 
+    @Transactional
+    fun changePassword(user: User, currentPassword: String, newPassword: String) {
+        if (user.passwordHash == null)
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "No password set for this account")
+        if (!passwordEncoder.matches(currentPassword, user.passwordHash))
+            throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Current password incorrect")
+        user.passwordHash = passwordEncoder.encode(newPassword)
+        userRepository.save(user)
+    }
+
     fun generateUniqueSlug(email: String): String {
         val base = email.substringBefore('@')
             .lowercase()

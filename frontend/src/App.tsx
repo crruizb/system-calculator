@@ -11,6 +11,7 @@ import { Register } from './pages/Register'
 import { Dashboard } from './pages/Dashboard'
 import { CalculatorForm } from './pages/CalculatorForm'
 import { BillingPage } from './pages/BillingPage'
+import { SettingsPage } from './pages/SettingsPage'
 import { PublicCalculator } from './pages/PublicCalculator'
 import { GettingStarted } from './pages/GettingStarted'
 
@@ -43,6 +44,7 @@ export default function App() {
               <Route path="/dashboard/new" element={<CalculatorForm />} />
               <Route path="/dashboard/:id" element={<CalculatorForm />} />
               <Route path="/dashboard/billing" element={<BillingPage />} />
+              <Route path="/dashboard/settings" element={<SettingsPage />} />
             </Route>
           </Route>
         </Routes>

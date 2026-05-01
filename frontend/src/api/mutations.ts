@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetchAuth } from "./client";
-import { calculatorKeys } from "./queries";
-import type { Calculator } from "./queries";
+import { calculatorKeys, tenantKeys } from "./queries";
+import type { Calculator, TenantMe } from "./queries";
 
 export function useDeleteCalculator() {
   const queryClient = useQueryClient();
@@ -75,5 +75,30 @@ export function useDuplicateCalculator() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: calculatorKeys.list() });
     },
+  });
+}
+
+export function useUpdateTenant() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (body: { name: string; slug: string }) =>
+      apiFetchAuth<TenantMe>("/api/tenants/me", {
+        method: "PUT",
+        body: JSON.stringify(body),
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: tenantKeys.me });
+    },
+  });
+}
+
+export function useChangePassword() {
+  return useMutation({
+    mutationFn: (body: { currentPassword: string; newPassword: string }) =>
+      apiFetchAuth("/api/auth/change-password", {
+        method: "PUT",
+        body: JSON.stringify(body),
+      }),
   });
 }
