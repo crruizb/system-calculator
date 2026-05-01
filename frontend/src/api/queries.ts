@@ -41,6 +41,7 @@ export interface TenantMe {
   name: string;
   plan: string;
   hasPassword: boolean;
+  emailVerified: boolean;
 }
 
 // ── Query Hooks ───────────────────────────────────────────────────

@@ -102,3 +102,10 @@ export function useChangePassword() {
       }),
   });
 }
+
+export function useResendVerification() {
+  return useMutation({
+    mutationFn: () =>
+      apiFetchAuth("/api/auth/resend-verification", { method: "POST" }),
+  });
+}

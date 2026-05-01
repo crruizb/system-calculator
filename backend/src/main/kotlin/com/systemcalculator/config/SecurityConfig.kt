@@ -46,6 +46,7 @@ class SecurityConfig(
                     "/api/auth/register",
                     "/api/auth/logout",
                     "/api/auth/refresh",
+                    "/api/auth/verify-email",
                     "/api/public/**",
                     "/api/pdf/**",
                     "/api/webhooks/**",

@@ -9,16 +9,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [tenantName, setTenantName] = useState<string | null>(null);
   const [tenantSlug, setTenantSlug] = useState<string | null>(null);
   const [tenantPlan, setTenantPlan] = useState<string | null>(null);
+  const [emailVerified, setEmailVerified] = useState<boolean | null>(null);
 
   function fetchTenant() {
-    return apiFetch<{ name: string; slug: string; plan: string }>("/api/tenants/me")
+    return apiFetch<{ name: string; slug: string; plan: string; emailVerified: boolean }>(
+      "/api/tenants/me"
+    )
       .then((data) => {
         setIsLoggedIn(true);
         setTenantName(data.name ?? null);
         setTenantSlug(data.slug ?? null);
         setTenantPlan(data.plan ?? null);
+        setEmailVerified(data.emailVerified ?? null);
       })
-      .catch(() => setIsLoggedIn(false));
+      .catch(() => {
+        setIsLoggedIn(false);
+        setEmailVerified(null);
+      });
   }
 
   useEffect(() => {
@@ -35,12 +42,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setTenantName(null);
     setTenantSlug(null);
     setTenantPlan(null);
+    setEmailVerified(null);
     void queryClient.invalidateQueries({ queryKey: tenantKeys.me });
     apiFetch("/api/auth/logout", { method: "POST" }).catch(() => {});
   }
 
+  async function resendVerificationEmail() {
+    await apiFetch("/api/auth/resend-verification", { method: "POST" });
+  }
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, tenantName, tenantSlug, tenantPlan, markLoggedIn, logout }}>
+    <AuthContext.Provider
+      value={{
+        isLoggedIn,
+        tenantName,
+        tenantSlug,
+        tenantPlan,
+        emailVerified,
+        markLoggedIn,
+        logout,
+        resendVerificationEmail,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

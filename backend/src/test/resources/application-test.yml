@@ -10,6 +10,10 @@ app:
   jwt:
     secret: test-secret-must-be-at-least-256-bits-long-padding-here
     expiration-ms: 86400000
+  frontend-url: http://localhost:5173
+  resend:
+    api-key: test-key
+    from-email: test@test.com
   google:
     client-id: test-client-id
   stripe:

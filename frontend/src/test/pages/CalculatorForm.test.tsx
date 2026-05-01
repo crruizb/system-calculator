@@ -58,4 +58,28 @@ describe("CalculatorForm", () => {
       expect(screen.getByText("Dashboard")).toBeInTheDocument(),
     );
   });
+
+  it("shows email not verified error when backend returns 403 EMAIL_NOT_VERIFIED", async () => {
+    vi.spyOn(client, "apiFetch").mockResolvedValue({
+      slug: "my-tenant",
+      plan: "free",
+    });
+    vi.spyOn(client, "apiFetchAuth")
+      .mockRejectedValue(new Error("403 EMAIL_NOT_VERIFIED"));
+    renderCreate();
+
+    await userEvent.type(screen.getByLabelText(/^name$/i), "My Calc");
+    await userEvent.type(screen.getByLabelText(/slug/i), "my-calc");
+    await userEvent.type(
+      screen.getByLabelText(/sheet url/i),
+      "https://docs.google.com/test",
+    );
+    await userEvent.click(screen.getByRole("button", { name: /create/i }));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(/verify your email before creating/i),
+      ).toBeInTheDocument(),
+    );
+  });
 });

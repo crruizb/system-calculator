@@ -22,6 +22,8 @@ class CalculatorService(
 
     @Transactional
     fun create(user: User, req: CreateCalculatorRequest): CalculatorResponse {
+        if (!user.emailVerified)
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "EMAIL_NOT_VERIFIED")
         val plan = subscriptionService.getEffectivePlan(user.tenant)
         val limit = PlanLimits.maxCalculators(plan)
         val current = calculatorRepository.countByTenantIdAndIsActiveTrue(user.tenant.id)
