@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service
 @Service
 class EmailService(
     private val emailSender: EmailSender,
-    @Value("\${app.frontend-url}") private val frontendUrl: String,
+    @Value("\${app.backend-url}") private val backendUrl: String,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
     suspend fun sendVerificationEmail(user: User, rawToken: String) {
-        val link = "$frontendUrl/api/auth/verify-email?token=$rawToken"
+        val link = "$backendUrl/api/auth/verify-email?token=$rawToken"
         emailSender.send(user.email, "Verify your email address", buildHtml(link))
         log.info("Sent verification email to {}", user.email)
     }

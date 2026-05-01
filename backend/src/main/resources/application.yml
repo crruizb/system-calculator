@@ -26,6 +26,7 @@ app:
     expiration-ms: 900000
     refresh-expiration-ms: 2592000000
   frontend-url: ${PREX_FRONTEND_URL:http://localhost:5173}
+  backend-url: ${PREX_BACKEND_BASE_URL:http://localhost:8080}
   resend:
     api-key: ${PREX_RESEND_API_KEY}
     from-email: ${PREX_RESEND_FROM_EMAIL}
