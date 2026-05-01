@@ -159,7 +159,8 @@
     "selectField": "Select {{field}}",
     "calculatedPrice": "Calculated price",
     "selectAllOptions": "Select all options",
-    "noMatch": "No match"
+    "noMatch": "No match",
+    "shareWhatsApp": "Share via WhatsApp"
   },
   "billing": {
     "title": "Billing",
