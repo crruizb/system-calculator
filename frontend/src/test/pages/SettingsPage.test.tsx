@@ -2,8 +2,9 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SettingsPage } from "../../pages/SettingsPage";
-import { AuthProvider } from "../../context/AuthContext";
-import { createTestQueryClient, TestProviders } from "../test-utils";
+import { AuthProvider } from "../../context/AuthProvider";
+import { TestProviders } from "../test-utils";
+import { createTestQueryClient } from "../test-helpers";
 import * as client from "../../api/client";
 
 function renderSettingsPage() {

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { calcT } from "../utils/calcT";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../hooks/useTheme";
 import { useTenantCalculator, useSheetData } from "../api/queries";
 import PriceCalculator from "../components/PriceCalculator";
 import PriceSummary from "../components/PriceSummary";
@@ -76,8 +76,7 @@ export function PublicCalculator() {
         setInstances((prev) => [{ ...prev[0], filters: params }, ...prev.slice(1)]);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterFields]);
+  }, [filterFields, searchParams]);
 
   const prices = useMemo(
     () => instances.map((inst) => matchPrice(data, inst.filters, filterFields)),

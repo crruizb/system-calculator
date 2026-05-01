@@ -1,4 +1,4 @@
-import { useTheme } from '../context/ThemeContext'
+import { useTheme } from '../hooks/useTheme'
 import { TopNavbar } from './TopNavbar'
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
