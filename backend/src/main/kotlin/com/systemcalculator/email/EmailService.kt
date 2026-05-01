@@ -15,7 +15,7 @@ class EmailService(
 
     suspend fun sendVerificationEmail(user: User, rawToken: String) {
         val link = "$frontendUrl/verify-email?token=$rawToken"
-        emailSender.send(user.email, "Verify your email address", buildTestHtml(link))
+        emailSender.send(user.email, "Verify your email address", buildHtml(link))
         log.info("Sent verification email to {}", user.email)
     }
 
@@ -37,11 +37,5 @@ class EmailService(
           </p>
         </body>
         </html>
-    """.trimIndent()
-
-    private fun buildTestHtml(link: String) = """
-        This is a test email from Prexario.
-        
-        Thanks
     """.trimIndent()
 }
