@@ -94,7 +94,7 @@ export function TopNavbar() {
         </Link>
         <Link
           to="/dashboard/billing"
-          className="px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm transition-colors"
+          className="px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm transition-colors cursor-pointer"
           style={{ color: "var(--color-text-muted)" }}
           onMouseEnter={(e) =>
             (e.currentTarget.style.color = "var(--color-text-primary)")
@@ -110,7 +110,7 @@ export function TopNavbar() {
       <div className="flex items-center gap-1 sm:gap-2 shrink-0">
         <button
           onClick={toggleLang}
-          className="px-1.5 sm:px-2 py-1 text-xs rounded border transition-colors"
+          className="px-1.5 sm:px-2 py-1 text-xs rounded border transition-colors cursor-pointer"
           style={{
             color: "var(--color-text-muted)",
             borderColor: "var(--color-border-line)",
@@ -120,7 +120,7 @@ export function TopNavbar() {
         </button>
         <button
           onClick={toggleTheme}
-          className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded transition-colors"
+          className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded transition-colors cursor-pointer"
           style={{ color: "var(--color-text-muted)" }}
           aria-label="Toggle theme"
           onMouseEnter={(e) =>
@@ -137,7 +137,7 @@ export function TopNavbar() {
             logout();
             navigate("/login");
           }}
-          className="px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm transition-colors"
+          className="px-2 sm:px-3 py-1.5 rounded text-xs sm:text-sm transition-colors cursor-pointer"
           style={{ color: "var(--color-text-muted)" }}
           onMouseEnter={(e) =>
             (e.currentTarget.style.color = "var(--color-text-primary)")

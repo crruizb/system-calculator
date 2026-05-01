@@ -48,7 +48,7 @@ export function Register() {
       <button
         onClick={toggleTheme}
         aria-label="Toggle theme"
-        className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded transition-colors"
+        className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded transition-colors cursor-pointer"
         style={{ color: "var(--color-text-muted)" }}
       >
         {theme === "dark" ? (
@@ -184,7 +184,7 @@ export function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-lg bg-[var(--color-main)] text-white font-semibold hover:bg-[var(--color-main-muted)] transition-colors disabled:opacity-50"
+            className="w-full py-3 rounded-lg bg-[var(--color-main)] text-white font-semibold hover:bg-[var(--color-main-muted)] transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
           >
             {loading ? t("register.submitting") : t("register.submit")}
           </button>

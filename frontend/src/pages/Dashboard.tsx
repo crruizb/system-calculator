@@ -1,11 +1,18 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { DuplicateDialog } from "../components/DuplicateDialog";
+import { EmbedDialog } from "../components/EmbedDialog";
 import { useCalculators } from "../api/queries";
-import { useDeleteCalculator, useToggleCalculator, useDuplicateCalculator } from "../api/mutations";
+import {
+  useDeleteCalculator,
+  useToggleCalculator,
+  useDuplicateCalculator,
+} from "../api/mutations";
 
 function planLimit(plan: string | null): number {
   if (plan === "pro") return 10;
@@ -28,10 +35,14 @@ export function Dashboard() {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const { t } = useTranslation();
   const { tenantPlan } = useAuth();
+  const { theme } = useTheme();
   const max = planLimit(tenantPlan);
   const navigate = useNavigate();
   const [duplicateCalc, setDuplicateCalc] = useState<Calculator | null>(null);
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
+  const [embedCalc, setEmbedCalc] = useState<Calculator | null>(null);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [menuPos, setMenuPos] = useState({ top: 0, right: 0 });
 
   const { data: calculators = [], isLoading: loading } = useCalculators();
   const deleteMutation = useDeleteCalculator();
@@ -201,73 +212,80 @@ export function Dashboard() {
                 /c/{c.tenantSlug}/{c.slug}
               </p>
             </div>
-            <div
-              className="flex items-center gap-4 text-sm border-t pt-3 flex-wrap"
-              style={{ borderColor: "var(--color-border-line)" }}
-            >
+            <div className="flex items-center gap-4 text-sm border-t border-border-line pt-3">
               <a
                 href={`/c/${c.tenantSlug}/${c.slug}`}
                 target="_blank"
                 rel="noreferrer"
-                className="transition-colors"
-                style={{ color: "var(--color-text-muted)" }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "var(--color-text-primary)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "var(--color-text-muted)")
-                }
+                className="text-text-muted hover:text-text-primary transition-colors"
               >
                 {t("dashboard.view")}
               </a>
               <Link
                 to={`/dashboard/${c.id}`}
-                className="transition-colors"
-                style={{ color: "var(--color-main)" }}
+                className="text-main transition-colors"
               >
                 {t("dashboard.edit")}
               </Link>
               <button
-                onClick={() => handleToggle(c)}
-                className="transition-colors"
-                style={{ color: "var(--color-text-muted)" }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "var(--color-text-primary)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "var(--color-text-muted)")
-                }
+                onClick={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  setMenuPos({ top: rect.bottom + 4, right: window.innerWidth - rect.right });
+                  setOpenMenuId(openMenuId === c.id ? null : c.id);
+                }}
+                className="ml-auto px-1 text-lg leading-none text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+                aria-label={t("dashboard.moreActions")}
               >
-                {c.isActive
-                  ? t("dashboard.deactivate")
-                  : t("dashboard.activate")}
-              </button>
-              {!atLimit && (
-                <button
-                  onClick={() => openDuplicateDialog(c)}
-                  className="transition-colors"
-                  style={{ color: "var(--color-text-muted)" }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "var(--color-text-primary)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = "var(--color-text-muted)")
-                  }
-                >
-                  {t("dashboard.duplicate")}
-                </button>
-              )}
-              <button
-                onClick={() => setConfirmDeleteId(c.id)}
-                className="ml-auto transition-colors"
-                style={{ color: "var(--color-error)" }}
-              >
-                {t("dashboard.delete")}
+                ···
               </button>
             </div>
           </li>
         ))}
       </ul>
+
+      {(() => {
+        const menuCalc = calculators.find((c) => c.id === openMenuId);
+        if (!menuCalc) return null;
+        return createPortal(
+          <>
+            <div className="fixed inset-0 z-40" onClick={() => setOpenMenuId(null)} />
+            <div
+              className="fixed z-50 min-w-40 rounded-lg border border-border-line bg-surface p-1 shadow-lg"
+              data-theme={theme}
+              style={{ top: menuPos.top, right: menuPos.right }}
+            >
+              <button
+                onClick={() => { handleToggle(menuCalc); setOpenMenuId(null); }}
+                className="w-full text-left px-3 py-1.5 rounded text-sm text-text-primary hover:bg-border-line transition-colors cursor-pointer"
+              >
+                {menuCalc.isActive ? t("dashboard.deactivate") : t("dashboard.activate")}
+              </button>
+              {!atLimit && (
+                <button
+                  onClick={() => { openDuplicateDialog(menuCalc); setOpenMenuId(null); }}
+                  className="w-full text-left px-3 py-1.5 rounded text-sm text-text-primary hover:bg-border-line transition-colors cursor-pointer"
+                >
+                  {t("dashboard.duplicate")}
+                </button>
+              )}
+              <button
+                onClick={() => { setEmbedCalc(menuCalc); setOpenMenuId(null); }}
+                className="w-full text-left px-3 py-1.5 rounded text-sm text-text-primary hover:bg-border-line transition-colors cursor-pointer"
+              >
+                {t("dashboard.embed")}
+              </button>
+              <div className="h-px bg-border-line my-1" />
+              <button
+                onClick={() => { setConfirmDeleteId(menuCalc.id); setOpenMenuId(null); }}
+                className="w-full text-left px-3 py-1.5 rounded text-sm text-error hover:bg-border-line transition-colors cursor-pointer"
+              >
+                {t("dashboard.delete")}
+              </button>
+            </div>
+          </>,
+          document.body
+        );
+      })()}
 
       <ConfirmDialog
         open={confirmDeleteId !== null}
@@ -288,6 +306,12 @@ export function Dashboard() {
         onConfirm={handleDuplicate}
         onCancel={() => setDuplicateCalc(null)}
         error={duplicateError}
+      />
+      <EmbedDialog
+        open={embedCalc !== null}
+        tenantSlug={embedCalc?.tenantSlug ?? ""}
+        calcSlug={embedCalc?.slug ?? ""}
+        onClose={() => setEmbedCalc(null)}
       />
     </div>
   );

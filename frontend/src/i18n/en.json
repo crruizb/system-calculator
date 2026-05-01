@@ -110,7 +110,15 @@
     "duplicateTitle": "Duplicate calculator",
     "duplicateError": "Failed to duplicate calculator",
     "duplicateLimitReached": "Calculator limit reached. Upgrade to duplicate.",
-    "inactive": "Inactive"
+    "inactive": "Inactive",
+    "moreActions": "More actions",
+    "embed": "Embed",
+    "embedTitle": "Embed calculator",
+    "embedSnippetLabel": "Copy this code to embed your calculator:",
+    "embedWidth": "Width",
+    "embedHeight": "Height (px)",
+    "embedCopy": "Copy",
+    "embedCopied": "Copied!"
   },
   "confirmDialog": {
     "deleteCalculatorTitle": "Delete calculator",

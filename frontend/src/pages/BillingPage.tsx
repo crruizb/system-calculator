@@ -51,7 +51,7 @@ export function BillingPage() {
             <button
               onClick={() => upgrade("basic")}
               disabled={loading}
-              className="p-6 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-main)]/30 hover:border-[var(--color-main)] transition-colors text-left"
+              className="p-6 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-main)]/30 hover:border-[var(--color-main)] transition-colors text-left cursor-pointer disabled:cursor-not-allowed"
             >
               <p className="font-semibold mb-1">{t("billing.planBasic")}</p>
               <p className="text-2xl font-display mb-2">
@@ -82,7 +82,7 @@ export function BillingPage() {
         <button
           onClick={openPortal}
           disabled={loading}
-          className="mt-6 text-sm text-[var(--color-main)] hover:underline"
+          className="mt-6 text-sm text-[var(--color-main)] hover:underline cursor-pointer disabled:cursor-not-allowed"
         >
           {t("billing.manage")}
         </button>

@@ -134,7 +134,7 @@ export function Landing() {
             )}
             <button
               onClick={toggleLang}
-              className="px-2 py-1 text-xs rounded border transition-colors"
+              className="px-2 py-1 text-xs rounded border transition-colors cursor-pointer"
               style={{
                 color: "var(--color-text-muted)",
                 borderColor: "var(--color-border-line)",
@@ -145,7 +145,7 @@ export function Landing() {
             <button
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              className="w-8 h-8 flex items-center justify-center rounded transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded transition-colors cursor-pointer"
               style={{ color: "var(--color-text-muted)" }}
             >
               {theme === "dark" ? <SunIcon /> : <MoonIcon />}

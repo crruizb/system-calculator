@@ -110,7 +110,15 @@
     "duplicateTitle": "Duplicar calculadora",
     "duplicateError": "Error al duplicar la calculadora",
     "duplicateLimitReached": "Límite de calculadoras alcanzado. Mejora tu plan para duplicar.",
-    "inactive": "Inactivo"
+    "inactive": "Inactivo",
+    "moreActions": "Más acciones",
+    "embed": "Insertar",
+    "embedTitle": "Insertar calculadora",
+    "embedSnippetLabel": "Copia este código para insertar tu calculadora:",
+    "embedWidth": "Ancho",
+    "embedHeight": "Alto (px)",
+    "embedCopy": "Copiar",
+    "embedCopied": "¡Copiado!"
   },
   "confirmDialog": {
     "deleteCalculatorTitle": "Eliminar calculadora",

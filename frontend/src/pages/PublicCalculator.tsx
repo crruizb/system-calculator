@@ -187,7 +187,7 @@ export function PublicCalculator() {
         <button
           onClick={toggleTheme}
           aria-label="Toggle theme"
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded transition-colors"
+          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded transition-colors cursor-pointer"
           style={{ color: "var(--color-text-muted)" }}
         >
           {theme === "dark" ? (
@@ -236,7 +236,7 @@ export function PublicCalculator() {
             <button
               key={inst.id}
               onClick={() => setActiveTabId(inst.id)}
-              className={`px-3 py-1 text-sm rounded-t-lg transition-colors ${
+              className={`px-3 py-1 text-sm rounded-t-lg transition-colors cursor-pointer ${
                 inst.id === activeTabId
                   ? "bg-[var(--color-surface)] text-[var(--color-main)] font-semibold"
                   : "text-[var(--color-text-primary)]/40 hover:text-[var(--color-text-primary)]/70"
@@ -251,7 +251,7 @@ export function PublicCalculator() {
               setInstances((prev) => [...prev, { id: newId, filters: {} }]);
               setActiveTabId(newId);
             }}
-            className="px-3 py-1 text-sm text-[var(--color-text-primary)]/40 hover:text-[var(--color-text-primary)]/70 transition-colors"
+            className="px-3 py-1 text-sm text-[var(--color-text-primary)]/40 hover:text-[var(--color-text-primary)]/70 transition-colors cursor-pointer"
           >
             +
           </button>
@@ -301,7 +301,7 @@ export function PublicCalculator() {
             <button
               onClick={handleDownloadPdf}
               disabled={pdfLoading}
-              className="px-6 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
+              className="px-6 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
               style={{ background: "var(--color-main)", color: "#fff" }}
             >
               {pdfLoading ? t("public.pdfLoading") : t("public.downloadPdf")}

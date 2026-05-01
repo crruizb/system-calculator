@@ -332,7 +332,7 @@ export function CalculatorForm() {
           <button
             type="submit"
             disabled={saving}
-            className="w-full py-3 rounded-lg bg-[var(--color-main)] text-white font-semibold hover:bg-[var(--color-main-muted)] transition-colors disabled:opacity-50"
+            className="w-full py-3 rounded-lg bg-[var(--color-main)] text-white font-semibold hover:bg-[var(--color-main-muted)] transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
           >
             {saving
               ? t("calcForm.saving")
