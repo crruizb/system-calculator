@@ -1,16 +1,15 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useTenantMe } from "../api/queries";
+import { useTenantMe, TenantMe } from "../api/queries";
 import { useUpdateTenant, useChangePassword } from "../api/mutations";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 
-export function SettingsPage() {
+function SettingsForm({ tenant }: { tenant: TenantMe }) {
   const { t } = useTranslation();
   const { markLoggedIn } = useAuth();
-  const { data: tenant } = useTenantMe();
 
-  const [name, setName] = useState("");
-  const [slug, setSlug] = useState("");
+  const [name, setName] = useState(tenant.name);
+  const [slug, setSlug] = useState(tenant.slug);
   const [companySaved, setCompanySaved] = useState(false);
   const [companyError, setCompanyError] = useState<string | null>(null);
 
@@ -22,13 +21,6 @@ export function SettingsPage() {
 
   const updateTenant = useUpdateTenant();
   const changePassword = useChangePassword();
-
-  useEffect(() => {
-    if (tenant) {
-      setName(tenant.name);
-      setSlug(tenant.slug);
-    }
-  }, [tenant]);
 
   const inputClass =
     "w-full px-4 py-2 rounded-lg bg-[var(--color-bg)] border border-[var(--color-main)]/30 focus:outline-none focus:border-[var(--color-main)] transition-colors";
@@ -70,9 +62,7 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="max-w-lg space-y-8">
-      <h1 className="font-display text-3xl">{t("settings.title")}</h1>
-
+    <>
       {/* Company section */}
       <div
         className="rounded-2xl p-5 sm:p-8"
@@ -138,7 +128,7 @@ export function SettingsPage() {
         }}
       >
         <h2 className="font-semibold text-lg mb-6">{t("settings.passwordSection")}</h2>
-        {tenant && !tenant.hasPassword ? (
+        {!tenant.hasPassword ? (
           <p className="text-sm" style={{ color: "var(--color-text-muted)" }}>
             {t("settings.passwordNoAuth")}
           </p>
@@ -199,6 +189,27 @@ export function SettingsPage() {
           </form>
         )}
       </div>
+    </>
+  );
+}
+
+export function SettingsPage() {
+  const { t } = useTranslation();
+  const { data: tenant } = useTenantMe();
+
+  if (!tenant) {
+    return (
+      <div className="max-w-lg">
+        <h1 className="font-display text-3xl">{t("settings.title")}</h1>
+        <p className="mt-4 text-[var(--color-text-muted)]">{t("settings.loading")}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-lg space-y-8">
+      <h1 className="font-display text-3xl">{t("settings.title")}</h1>
+      <SettingsForm key={tenant.id} tenant={tenant} />
     </div>
   );
 }

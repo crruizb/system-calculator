@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext";
-import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../hooks/useTheme";
+import { useAuth } from "../hooks/useAuth";
 import { useTranslation, Trans } from "react-i18next";
 import { SheetMockup } from "../components/SheetMockup";
 import { CalculatorMockup } from "../components/CalculatorMockup";

@@ -13,7 +13,7 @@ class GlobalExceptionHandlerTest : BaseIntegrationTest() {
 
     @Test
     fun `duplicate slug registration returns structured error response`() {
-        val body = """{"email":"a@test.com","password":"secret123","tenantName":"T","tenantSlug":"dup-test-slug"}"""
+        val body = """{"email":"a2@test.com","password":"secret123","tenantName":"T1","tenantSlug":"dup-test-slug"}"""
 
         mockMvc.post("/api/auth/register") {
             contentType = MediaType.APPLICATION_JSON
@@ -22,7 +22,7 @@ class GlobalExceptionHandlerTest : BaseIntegrationTest() {
 
         mockMvc.post("/api/auth/register") {
             contentType = MediaType.APPLICATION_JSON
-            content = """{"email":"b@test.com","password":"secret123","tenantName":"T","tenantSlug":"dup-test-slug"}"""
+            content = """{"email":"b@test.com","password":"secret123","tenantName":"T1","tenantSlug":"dup-test-slug"}"""
         }.andExpect {
             status { isConflict() }
             jsonPath("$.status") { value(409) }
@@ -36,7 +36,7 @@ class GlobalExceptionHandlerTest : BaseIntegrationTest() {
     fun `login with wrong password returns structured error response`() {
         mockMvc.post("/api/auth/register") {
             contentType = MediaType.APPLICATION_JSON
-            content = """{"email":"wrong-pw@test.com","password":"correct1","tenantName":"T","tenantSlug":"wrong-pw-slug"}"""
+            content = """{"email":"wrong-pw@test.com","password":"correct1","tenantName":"T2","tenantSlug":"wrong-pw-slug"}"""
         }.andExpect { status { isCreated() } }
 
         mockMvc.post("/api/auth/login") {

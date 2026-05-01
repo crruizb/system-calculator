@@ -2,10 +2,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { AuthProvider } from "../../context/AuthContext";
+import { AuthProvider } from "../../context/AuthProvider";
 import { Dashboard } from "../../pages/Dashboard";
 import * as client from "../../api/client";
-import { createTestQueryClient, TestProviders } from "../test-utils";
+import { TestProviders } from "../test-utils";
+import { createTestQueryClient } from "../test-helpers";
 
 function renderDashboard() {
   const queryClient = createTestQueryClient();

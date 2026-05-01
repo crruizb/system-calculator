@@ -1,24 +1,8 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { apiFetch } from "../api/client";
 import { queryClient } from "../api/queryClient";
 import { tenantKeys } from "../api/queries";
-
-interface AuthContextValue {
-  isLoggedIn: boolean | null;
-  tenantName: string | null;
-  tenantSlug: string | null;
-  tenantPlan: string | null;
-  markLoggedIn: () => Promise<void>;
-  logout: () => void;
-}
-
-const AuthContext = createContext<AuthContextValue | null>(null);
+import { AuthContext } from "./AuthContext";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
@@ -60,11 +44,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-export function useAuth(): AuthContextValue {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
-  return ctx;
 }
