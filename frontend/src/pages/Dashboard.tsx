@@ -16,8 +16,8 @@ import {
 
 function planLimit(plan: string | null): number {
   if (plan === "pro") return 10;
-  if (plan === "basic") return 3;
-  return 1;
+  if (plan === "basic") return 5;
+  return 3;
 }
 
 interface Calculator {

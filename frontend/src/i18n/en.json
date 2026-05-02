@@ -34,9 +34,9 @@
     "feature3Title": "Your brand",
     "feature3Body": "Upgrade to Pro: remove the watermark, apply your logo, and set your own accent color.",
     "ctaHeading": "Ready to simplify your pricing?",
-    "ctaSubtitle": "Free plan includes 1 calculator. No credit card required.",
+    "ctaSubtitle": "Free plan includes 3 calculators. No credit card required.",
     "ctaButton": "Create your first calculator",
-    "copyright": "© 2025 Prexario"
+    "copyright": "© 2026 Prexario"
   },
   "guide": {
     "eyebrow": "Getting Started",
@@ -199,7 +199,7 @@
     "planBasic": "Basic",
     "planPro": "Pro",
     "basicPrice": "~€5/mo",
-    "basicFeatures": "3 calculators · No watermark",
+    "basicFeatures": "5 calculators · No watermark",
     "proPrice": "~€10/mo",
     "proFeatures": "10 calculators · Custom branding",
     "manage": "Manage subscription →"

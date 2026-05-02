@@ -50,19 +50,21 @@ class CalculatorControllerTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun `free plan cannot create more than 1 calculator`() {
+    fun `free plan cannot create more than 3 calculators`() {
         val token = registerAndGetCookie("calc2@test.com", "calc-tenant-2")
 
-        mockMvc.post("/api/calculators") {
-            cookie(Cookie("token", token))
-            contentType = MediaType.APPLICATION_JSON
-            content = """{"name":"Calc 1","slug":"calc-1","sheetUrl":"https://example.com/1"}"""
-        }.andExpect { status { isCreated() } }
+        repeat(3) { i ->
+            mockMvc.post("/api/calculators") {
+                cookie(Cookie("token", token))
+                contentType = MediaType.APPLICATION_JSON
+                content = """{"name":"Calc ${i + 1}","slug":"calc-${i + 1}","sheetUrl":"https://example.com/${i + 1}"}"""
+            }.andExpect { status { isCreated() } }
+        }
 
         mockMvc.post("/api/calculators") {
             cookie(Cookie("token", token))
             contentType = MediaType.APPLICATION_JSON
-            content = """{"name":"Calc 2","slug":"calc-2","sheetUrl":"https://example.com/2"}"""
+            content = """{"name":"Calc 4","slug":"calc-4","sheetUrl":"https://example.com/4"}"""
         }.andExpect { status { isForbidden() } }
     }
 

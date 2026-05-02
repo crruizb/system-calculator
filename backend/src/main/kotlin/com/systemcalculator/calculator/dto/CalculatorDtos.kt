@@ -5,9 +5,9 @@ import jakarta.validation.constraints.Pattern
 
 object PlanLimits {
     fun maxCalculators(plan: String): Int = when (plan) {
-        "basic" -> 3
+        "basic" -> 5
         "pro"   -> 10
-        else    -> 1   // free
+        else    -> 3   // free
     }
 }
 

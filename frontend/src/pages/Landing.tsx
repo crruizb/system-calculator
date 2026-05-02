@@ -408,23 +408,26 @@ export function Landing() {
       </section>
 
       {/* Footer */}
-      <footer style={{ borderTop: "1px solid var(--color-border-line)" }}>
-        <div
-          className="max-w-5xl mx-auto px-6 sm:px-8 py-6 flex items-center justify-between text-xs"
-          style={{ color: "var(--color-text-dim)" }}
-        >
+      <footer className="border-t border-[var(--color-border-line)]">
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 py-6 flex items-center justify-between text-xs text-[var(--color-text-dim)]">
           <span>{t("landing.copyright")}</span>
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
+            <a
+              href="mailto:support@prexario.dpdns.org"
+              className="text-[var(--color-text-dim)]"
+            >
+              support@prexario.dpdns.org
+            </a>
             {isLoggedIn === true ? (
-              <Link to="/dashboard" style={{ color: "var(--color-text-dim)" }}>
+              <Link to="/dashboard" className="text-[var(--color-text-dim)]">
                 Dashboard
               </Link>
             ) : (
               <>
-                <Link to="/login" style={{ color: "var(--color-text-dim)" }}>
+                <Link to="/login" className="text-[var(--color-text-dim)]">
                   {t("nav.signIn")}
                 </Link>
-                <Link to="/register" style={{ color: "var(--color-text-dim)" }}>
+                <Link to="/register" className="text-[var(--color-text-dim)]">
                   {t("nav.register")}
                 </Link>
               </>

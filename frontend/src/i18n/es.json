@@ -34,9 +34,9 @@
     "feature3Title": "Tu marca",
     "feature3Body": "Actualiza a Pro: elimina la marca de agua, aplica tu logo y establece tu propio color.",
     "ctaHeading": "¿Listo para simplificar tus precios?",
-    "ctaSubtitle": "El plan gratuito incluye 1 calculadora. Sin tarjeta de crédito.",
+    "ctaSubtitle": "El plan gratuito incluye 3 calculadoras. Sin tarjeta de crédito.",
     "ctaButton": "Crea tu primera calculadora",
-    "copyright": "© 2025 Prexario"
+    "copyright": "© 2026 Prexario"
   },
   "guide": {
     "eyebrow": "Primeros pasos",
@@ -199,7 +199,7 @@
     "planBasic": "Básico",
     "planPro": "Pro",
     "basicPrice": "~€5/mes",
-    "basicFeatures": "3 calculadoras · Sin marca de agua",
+    "basicFeatures": "5 calculadoras · Sin marca de agua",
     "proPrice": "~€10/mes",
     "proFeatures": "10 calculadoras · Marca personalizada",
     "manage": "Gestionar suscripción →"
