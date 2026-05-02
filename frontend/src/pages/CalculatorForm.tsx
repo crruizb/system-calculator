@@ -156,6 +156,20 @@ export function CalculatorForm() {
               onChange={(e) => setSheetUrl(e.target.value)}
               className={inputClass()}
             />
+            {!isEdit && (
+              <button
+                type="button"
+                onClick={() =>
+                  setSheetUrl(
+                    "https://docs.google.com/spreadsheets/d/e/2PACX-1vTwa3GZCP3dGDhU1tUaFgI3re2PjfJaXqFZ8wmOrXKS1WhPBM9IxtFE6f5hYZ-N-vktEagig3HiuVPz/pub?gid=0&single=true&output=csv",
+                  )
+                }
+                className="mt-1.5 text-xs transition-colors cursor-pointer"
+                style={{ color: "var(--color-main)" }}
+              >
+                {t("calcForm.sheetUrlExample")}
+              </button>
+            )}
           </div>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">

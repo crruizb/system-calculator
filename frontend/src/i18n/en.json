@@ -141,6 +141,7 @@
     "slug": "Slug",
     "sheetUrl": "Google Sheet URL",
     "sheetUrlHelp": "How do I get this URL?",
+    "sheetUrlExample": "Use example sheet",
     "currency": "Currency",
     "locale": "Language",
     "saving": "Saving…",
